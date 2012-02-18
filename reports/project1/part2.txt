@@ -1,0 +1,30 @@
+﻿Part II: Tracking
+
+Algorithm:
+To track Pleo we used OpenCV to capture an image and draw on it. We used the simple blob detector built into OpenCV to do the actual tracking of the robot. We start by capturing the image from the camera then blurring it to smooth the image for the blob detector. We then convert this blurred image to Hue, Saturation, and Value types. We again blur the image to smooth out the conversion. Once we have a smooth HSV converted image we can set the thresholds for hue, saturation, and value. We do just this next by setting the hue and saturation thresholds for the color we wish to track, which was a red piece of paper attached to Pleo. Once we have the thresholds we multiply the lower and upper bound to get the range in a single variable. 
+
+To distinguish the paper we used to track we found that only the hue and saturation made a difference. Since we only needed hue and saturation we finished setting the thresholds and multiplied hue and saturation to have a range in a single variable. We then eroded and dilated the image to reduce the amount of noise in the image. This creates a black and white image that allows the blob detector to work more efficiently. With the image complete for tracking we created a blob detector using OpenCV’s simple blob detector. Since the camera was hung from roughly 3m we had to constrain the size of the blob that could be detected. Once we had the parameters set we started the detection of the blob and put those values into an array of OpenCV Key Points. We used these points to draw a circle on the screen to show us how it tracked. We also kept track of these points to build the path of the robot every five frames. Using these path points we drew dots to show how he moved along the expected path. We also outputted these points to a file for later analysis.
+
+
+Questions:
+
+Assume that the camera is pointing straight down and the world frame is the point on the ground that shows up at the center of the camera image with Xw pointing right in the image and Yw pointing up. Assume the robot starts somewhere in the lower-left corner of the image facing upwards (Yw direction).
+
+1. Use a homogeneous transform to represent the relationship between the world coordinate frame and the camera coordinate frame. Explain in words what this transform does. Why is it useful?
+
+--
+
+2. Use a homogeneous transform to represent the relationship between the camera frame and the image (pixel) coordinate frame. Explain in words what this transform represents. Why is it useful?
+
+--Image frame transform allows for pixel displacements to be used to calculate robot movement/displacement.
+
+3. Give the homogeneous transform that maps world coordinates to image (pixel) coordinates.
+
+-- imagecoords = MiMc(wcoords)
+
+
+4. Use the transforms above to draw a square in OpenCV that represents the target robot trajec- tory and include a screenshot in the report. Also, include a screenshot of the robot executing the trajectory.
+
+5. What is the Euclidian distance (in pixels) between the robot’s location at the end of the first segment of the trajectory and the predicted end of the first segment? Similarly, what is the distance between the robot’s position of the whole trajectory and the expected location?
+
+6. Identify the relationship between the errors in pixels and the errors you found in Part I.

@@ -1,0 +1,35 @@
+<ugobe_project name="sensor">
+  <set-default name="INCLUDES" value="" />
+
+  <options>
+    <include value="./include:../../include"/>
+    <tools>
+      <pawn value="../../bin/pawncc %i -S128 -O2 -V2048 -C- %I -o%o TARGET=100"/>
+    </tools>
+    <directories>
+      <build value="build"/>
+      <include value="include"/>
+    </directories>
+  </options>
+
+  <set-default name="MEDIA" value="../../media"/>
+
+  <set name="COMMANDS" value="${MEDIA}\commands"/>
+  <set name="MOTIONS" value="${MEDIA}\motions"/>
+  <set name="SOUNDS" value="${MEDIA}\sounds"/>
+
+  <resources>
+    <script path="sensors.p"/>
+    <!-- Sounds -->
+    <sound path="${SOUNDS}/s3_grunt01.wav"/>
+    <sound path="${SOUNDS}/s3_grunt02.wav"/>
+    <sound path="${SOUNDS}/s3_grunt03.wav"/>
+    <sound path="${SOUNDS}/s3_grunt04.wav"/>
+    <sound path="${SOUNDS}/sq1_grunt01.wav"/>
+    <sound path="${SOUNDS}/moo.wav"/>
+    <sound path="${SOUNDS}/sq1_howl02.wav"/>
+    <command path="${COMMANDS}/snd_grunt.csv" />
+    <command path="${COMMANDS}/moo.csv"/>
+    <command path="${COMMANDS}/howl.csv"/>
+  </resources>
+</ugobe_project>

@@ -1,0 +1,40 @@
+Part III: Analysis
+
+Algorithm:
+
+We decided to implement a triangle as our second shape. We chose an equilateral triangle that starts straight for 1m, then turns 120 degrees, continues straight for another 1m, turns again 120 degrees, and then does a final 1m straight. We utilized our same walkForward and turnRight motion sequences that we created in the Pleo sub-system to implement the triangle. The walkForward didn't need to be changed because our square was also 1m, however we had to increase the cycles of our turnRight to get the 120 degree turn.
+
+
+Questions:
+
+1. Design your own arbitrary trajectory for the robot to follow (be creative!). Repeat the steps from Parts I and II for this trajectory and show pictures that demonstrate the expected trajectory for the robot in OpenCV and the actual trajectory the robot followed.
+
+** Duplicate part 1 and 2 for triangle.
+
+
+
+2. Clearly, your robot never achieves the exact trajectory you expect. Lets think about what can be done to rectify this issue. Answer the following questions:
+
+(a) Suppose you can use the overhead camera while you control the robot. Can you get your robot to achieve each target point on the trajectory? If so, how? Provide less than 10 lines of pseudo-code that might be used to implement your solution.
+
+	Yes.  
+	
+	trajAra = array of target points (Xworld,Yworld) to 					trajectory.
+
+	locationAra = array of robot location (Xworld,Yworld) 				readings read by camera. 
+
+	
+
+	calculate the delta from the actual path versus the ideal
+	trajectory
+	if this delta crosses a threshold then adjust movement to 	compenstate in the opposite direction
+	keep doing this
+
+
+
+(b) Now, suppose we don’t give you the overhead camera while you control the robot. Is it still possible to improve the accuracy with which your robot reaches the target points? If it is possible, describe a method that could be used. If not, explain why not.
+
+	if the robot has external sensors at its disposal with which to acquire an accurate sense of it's orientation and position in the world frame, and some accurate means of proprioception within the robot, with which to maintain real-time knowledge of the robot's actuator movements and subsequent joint-space position and orientation, then this data could be used by the robot to correct itself when it deviates from the expected trajectory.
+
+	otherwise, without some source of information relating the robot's world-space position to its joint-space displacements, correcting deviations from its path would be impossible.
+	

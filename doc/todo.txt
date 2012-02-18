@@ -1,0 +1,10 @@
+- Make the com port for Pleo configurable
+- Finish the Monitor subsystem so we can add some external
+	application support
+- remove the HTTP support from the Camera subsystem, we don't
+	need it
+- when jp starts, make the console be the active window, not the
+	other windows
+- put the camera & pleo windows in a single openCv window
+- refactor the Pleo commands a bit to make them better
+- add in a Personality subsystem
