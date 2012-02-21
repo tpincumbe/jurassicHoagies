@@ -902,7 +902,20 @@ void PleoSubsystem::Execute(string behavior, string argument)
 	else if ( behavior.compare("walkForward") == 0 )
 	{
 		ClearMovements();
+		int cycles = atoi(argument.c_str());
 
+		cycles = (cycles == 0) ? 1 : cycles;
+		for ( int i = 0; i < cycles; i++ )
+		{
+			AddMovementFromFile("walkForward.csv");
+		}
+
+		StartMovement(false);
+	}
+	else if ( behavior.compare("walkForwardOLD") == 0 )
+	{
+		ClearMovements();
+	
 		int cycles = atoi(argument.c_str());
 
 		//if no parameter passed, default to 1

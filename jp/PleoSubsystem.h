@@ -17,7 +17,7 @@
 #include <cv.h>
 #include <cxcore.h>
 #include <highgui.h>
-#define PLEO_PORT "COM3"
+#define PLEO_PORT "COM4"
 
 
 static string joint_name_ara[14] = {"Right Shoulder", 
