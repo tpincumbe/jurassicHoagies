@@ -2,9 +2,9 @@
   <set-default name="INCLUDES" value="" />
 
   <options>
-    <include value="./include:../../include"/>
+    <include value="./include:./files/include"/>
     <tools>
-      <pawn value="../../bin/pawncc %i -S128 -O2 -V2048 -C- %I -o%o TARGET=100"/>
+      <pawn value="./files/bin/pawncc %i -S128 -O2 -V2048 -C- %I -o%o TARGET=100"/>
     </tools>
     <directories>
       <build value="build"/>
@@ -12,7 +12,7 @@
     </directories>
   </options>
 
-  <set-default name="MEDIA" value="../../media"/>
+  <set-default name="MEDIA" value="./files/media"/>
 
   <set name="COMMANDS" value="${MEDIA}\commands"/>
   <set name="MOTIONS" value="${MEDIA}\motions"/>
@@ -20,16 +20,14 @@
 
   <resources>
     <script path="sensors.p"/>
-    <!-- Sounds -->
-    <sound path="${SOUNDS}/s3_grunt01.wav"/>
-    <sound path="${SOUNDS}/s3_grunt02.wav"/>
-    <sound path="${SOUNDS}/s3_grunt03.wav"/>
-    <sound path="${SOUNDS}/s3_grunt04.wav"/>
-    <sound path="${SOUNDS}/sq1_grunt01.wav"/>
-    <sound path="${SOUNDS}/moo.wav"/>
-    <sound path="${SOUNDS}/sq1_howl02.wav"/>
-    <command path="${COMMANDS}/snd_grunt.csv" />
-    <command path="${COMMANDS}/moo.csv"/>
-    <command path="${COMMANDS}/howl.csv"/>
+    
+    <!-- Motions -->
+    <motion path="${MOTIONS}/turnRight.csv" />
+    <motion path="${MOTIONS}/turnRightHard.csv" />
+    <motion path="${MOTIONS}/turnLeft.csv" />
+    <motion path="${MOTIONS}/turnLeftHard.csv" />
+    <motion path="${MOTIONS}/walkForward.csv" />
+    <motion path="${MOTIONS}/stand_straight.csv" />
+    
   </resources>
 </ugobe_project>
