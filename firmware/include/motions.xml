@@ -1,0 +1,8 @@
+<enum max="32767" min="8192" name="motion" namesoff="true" short="mot">
+  <e id=" 8192" name="turnRight" />
+  <e id=" 8193" name="turnRightHard" />
+  <e id=" 8194" name="turnLeft" />
+  <e id=" 8195" name="turnLeftHard" />
+  <e id=" 8196" name="walkForward" />
+  <e id=" 8197" name="stand_straight" />
+</enum>

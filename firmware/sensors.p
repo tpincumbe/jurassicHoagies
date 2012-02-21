@@ -11,7 +11,8 @@
 #include <pleo/joints.inc>
 #include <Joint.inc>
 #include <Sound.inc>
-#include "commands.inc"
+#include <Motion.inc>
+#include "motions.inc"
 
 static i;
 // static = global variable
@@ -98,25 +99,6 @@ public on_sensor(time, sensor_name:sensor, value)
 
         }
 
-		if (value == 3)
-		{
-			if (ch[0] == 'a' && ch[2] == '!')
-			{
-				if ( ch[1] == '1' )
-				{
-				  sound_command(cmd_moo);
-				}
-				if ( ch[1] == '2' )
-				{
-					sound_command(cmd_snd_grunt);
-				}
-				if ( ch[1] == '3' )
-				{
-					sound_command(cmd_howl);
-				}
-			}
-		}
-
         if(value == 16)
         {
           if(ch[0] == 'm' && ch[15] == '!')
@@ -131,6 +113,7 @@ public on_sensor(time, sensor_name:sensor, value)
          }
         
         } // end case SENSOR_TERMINAL
+        
       } // end switch
     // returning true will cause the sensor to be reset. if we do not
     // do this, we will continue to be called, unless we do an explicit resetSensor call
