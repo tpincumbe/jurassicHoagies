@@ -169,6 +169,12 @@ private:
 	void CalculateMovementDelta();
 	void SendMovementData();
 
+	void walkForward(int cycles);
+	void turnRight(int cycles);
+	void turnRightHard(int cycles);
+	void turnLeft(int cycles);
+	void turnLeftHard(int cycles);
+
 	#define delay 1
 	#define torsoAngle 0
 };

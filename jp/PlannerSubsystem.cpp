@@ -13,6 +13,8 @@
 //
 //--------------------------------------------------------------------
 #include "PlannerSubsystem.h"
+#include "RoutePlanner.h"
+#include "SerialTerm.h"
 
 PlannerSubsystem::PlannerSubsystem(void)
 {
@@ -38,7 +40,35 @@ void PlannerSubsystem::Execute(string behavior, string argument)
 	// assume argument is just a string for now
 	m_logFile->out("behavior: %s arg: %s",behavior.c_str(),argument.c_str());
 
-	if ( behavior.compare("performSquare") == 0 )
+	if ( behavior.compare("findFruit") == 0 )
+	{
+		float ppos[] = {0, 0, 0}, tpos[] = {0, 0};
+		int action = getAction(ppos, tpos);
+
+		while (0 != action){
+			if (WALK_FORWARD == action)
+			{
+				walkForward(1);
+			}
+			else if (VEER_LEFT == action)
+			{
+				turnLeft(1);
+			}
+			else if (VEER_RIGHT == action)
+			{
+				turnRight(1);
+			}
+			else if (SHARP_TURN_LEFT == action)
+			{
+				turnLeftHard(1);
+			}
+			else if (SHARP_TURN_RIGHT == action)
+			{
+				turnRightHard(1);
+			}
+		}
+	}
+	else if ( behavior.compare("performSquare") == 0 )
 	{
 		// Here we are going to get Pleo to perform a square maneuver, getting him to 
 		// walk straight, then turn 90 degrees, then repeat until he has reached the 
@@ -169,4 +199,65 @@ void PlannerSubsystem::Execute(string behavior, string argument)
 string PlannerSubsystem::MonitorMessage()
 {
 	return "";
+}
+
+
+void PlannerSubsystem::walkForward(int cycles)
+{
+	char *command = "motion command walkForward";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3250);
+	}
+}
+
+void PlannerSubsystem::turnRight(int cycles)
+{
+	char *command = "motion command turnRight";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3400);
+	}
+}
+
+void PlannerSubsystem::turnRightHard(int cycles)
+{
+	char *command = "motion command turnRightHard";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3100);
+	}
+}
+
+void PlannerSubsystem::turnLeft(int cycles)
+{
+	char *command = "motion command turnLeft";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3500);
+	}
+}
+
+void PlannerSubsystem::turnLeftHard(int cycles)
+{
+	char *command = "motion command turnLeftHard";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3600);
+	}
 }

@@ -28,8 +28,8 @@ int getAction(float* pleo_pos, float* target_pos)
 	target_y = target_pos[1];
 
 	/*Calculate the unit vector for the pleo's direction*/
-	pleo_unit_x = acos(pleo_ori);
-	pleo_unit_y = asin(pleo_ori);
+	pleo_unit_x = acos(pleo_ori*0.01745);
+	pleo_unit_y = asin(pleo_ori*0.01745);
 
 	/*Calculate the destination vector (From pleo's position to the target*/
 	destination_vector[0] = target_x - pleo_y;
@@ -48,7 +48,7 @@ int getAction(float* pleo_pos, float* target_pos)
 	destination_unit[0] = destination_vector[0]/destination_mag;
 	destination_unit[1] = destination_vector[1]/destination_mag;
 
-	target_angle = acos(destination_unit[0]); /*or: asin(destination_unit[1]);*/
+	target_angle = acos(destination_unit[0]) * 57.2958; /*or: asin(destination_unit[1]);*/
 	
 	/*Calculate the angle difference*/
 	angle_diff = target_angle - pleo_ori;

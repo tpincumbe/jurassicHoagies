@@ -757,83 +757,38 @@ void PleoSubsystem::Execute(string behavior, string argument)
 	}
 	else if ( behavior.compare("walkForward") == 0 )
 	{
-		ClearMovements();
-		int cycles = atoi(argument.c_str());
-		char *command = "motion command walkForward";
-		int clen = strlen(command);
-
+		int cycles = atoi(argument.c_str());	
 		cycles = (cycles == 0) ? 1 : cycles;
-		for ( int i = 0; i < cycles; i++ )
-		{
-			serialterm_send(command, clen);
-			Sleep(3250);
-		}
 
-		
+		walkForward(cycles);		
 	}
 	else if ( behavior.compare("turnRight") == 0 )
 	{
 		ClearMovements();
-		int cycles = atoi(argument.c_str());
-		char *command = "motion command turnRight";
-		int clen = strlen(command);
-
-		cycles = (cycles == 0) ? 1 : cycles;
-		for ( int i = 0; i < cycles; i++ )
-		{
-			serialterm_send(command, clen);
-			Sleep(3400);
-		}
-
-		
+		int cycles = atoi(argument.c_str());\
+		cycles = (cycles == 0) ? 1 : cycles;	
+		turnRight(cycles);
 	}
 	else if ( behavior.compare("turnRightHard") == 0 )
 	{
 		ClearMovements();
 		int cycles = atoi(argument.c_str());
-		char *command = "motion command turnRightHard";
-		int clen = strlen(command);
-
-		cycles = (cycles == 0) ? 1 : cycles;
-		for ( int i = 0; i < cycles; i++ )
-		{
-			serialterm_send(command, clen);
-			Sleep(3100);
-		}
-
-		
+		cycles = (cycles == 0) ? 1 : cycles;	
+		turnRightHard(cycles);
 	}
 	else if ( behavior.compare("turnLeft") == 0 )
 	{
 		ClearMovements();
 		int cycles = atoi(argument.c_str());
-		char *command = "motion command turnLeft";
-		int clen = strlen(command);
-
 		cycles = (cycles == 0) ? 1 : cycles;
-		for ( int i = 0; i < cycles; i++ )
-		{
-			serialterm_send(command, clen);
-			Sleep(3500);
-		}
-
-		
+		turnLeft(cycles);
 	}
 	else if ( behavior.compare("turnLeftHard") == 0 )
 	{
 		ClearMovements();
 		int cycles = atoi(argument.c_str());
-		char *command = "motion command turnLeftHard";
-		int clen = strlen(command);
-
-		cycles = (cycles == 0) ? 1 : cycles;
-		for ( int i = 0; i < cycles; i++ )
-		{
-			serialterm_send(command, clen);
-			Sleep(3600);
-		}
-
-		
+		cycles = (cycles == 0) ? 1 : cycles;	
+		turnLeftHard(cycles);
 	}
 	else if ( behavior.compare("walkForwardOLD") == 0 )
 	{
@@ -1525,4 +1480,65 @@ void PleoSubsystem::SendMovementData()
 	serialterm_send(m_jointData, size);
 	m_moving = true;
 	
+}
+
+
+void PleoSubsystem::walkForward(int cycles)
+{
+	char *command = "motion command walkForward";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3250);
+	}
+}
+
+void PleoSubsystem::turnRight(int cycles)
+{
+	char *command = "motion command turnRight";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3400);
+	}
+}
+
+void PleoSubsystem::turnRightHard(int cycles)
+{
+	char *command = "motion command turnRightHard";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3100);
+	}
+}
+
+void PleoSubsystem::turnLeft(int cycles)
+{
+	char *command = "motion command turnLeft";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3500);
+	}
+}
+
+void PleoSubsystem::turnLeftHard(int cycles)
+{
+	char *command = "motion command turnLeftHard";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3600);
+	}
 }
