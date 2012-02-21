@@ -16,6 +16,7 @@
 #include "SerialTerm.h"
 #include <iostream>
 #include <fstream>
+using namespace std;
 
 PleoSubsystem::PleoSubsystem(void)
 {
@@ -635,7 +636,7 @@ void PleoSubsystem::Execute(string behavior, string argument)
 
 		StartMovement(false);
 	}
-	else if ( behavior.compare("turnRight") == 0 )
+	else if ( behavior.compare("turnRightOLD") == 0 )
 	{
 		ClearMovements();
 
@@ -754,163 +755,85 @@ void PleoSubsystem::Execute(string behavior, string argument)
 		}
 		StartMovement(false);
 	}
-	else if ( behavior.compare("badwalkForward") == 0 )
-	{
-		ClearMovements();
-
-		int cycles = atoi(argument.c_str());
-
-		//if no parameter passed, default to 1
-		cycles = (cycles == 0) ? 1 : cycles;
-
-
-		for ( int i = 0; i < cycles; i++ )
-		{
-
-			//throwing head is necessary to limit hind leg scraping
-			//on carpet - head balances over forward-moving hand and pivots
-			//body, lifting opposite hind leg as it is coming forward
-
-			//right shoulder goes further than left forward to help counter
-			//listing to the left
-
-			// Left Shoulder forward
-			// Right Hip forward
-			//bend right knee to prevent scraping
-			//AddMultiMovement(delay,10,JOINT_RIGHT_SHOULDER,-15,
-			//					 JOINT_RIGHT_ELBOW,0,
-			//					 JOINT_RIGHT_HIP,-10,
-			//					 JOINT_RIGHT_KNEE,-25,
-
-			//					 JOINT_LEFT_SHOULDER,8,
-			//					 JOINT_LEFT_ELBOW,8,
-			//					 JOINT_LEFT_HIP,-10,
-			//					 JOINT_LEFT_KNEE,0,
-
-			//					 JOINT_NECK_HORIZONTAL,-15,
-
-			//					 JOINT_TORSO,-10);
-
-			//
-			// Left Shoulder forward
-			// Right Hip forward
-			AddMultiMovement(delay,10,JOINT_RIGHT_SHOULDER,-15,
-								 JOINT_RIGHT_ELBOW,0,
-								 JOINT_RIGHT_HIP, 25,
-								 JOINT_RIGHT_KNEE,-10,
-
-								 JOINT_LEFT_SHOULDER,15,
-								 JOINT_LEFT_ELBOW,0,
-								 JOINT_LEFT_HIP,-15,
-								 JOINT_LEFT_KNEE,0,
-
-								 JOINT_NECK_HORIZONTAL,-15,
-
-								 JOINT_TORSO, torsoAngle);
-
-			//
-			// Right hip stomp
-			// Left front stomp
-			AddMultiMovement(delay,10,JOINT_RIGHT_SHOULDER,-15,
-								 JOINT_RIGHT_ELBOW,15,
-								 JOINT_RIGHT_HIP,15,
-								 JOINT_RIGHT_KNEE,0,
-
-								 JOINT_LEFT_SHOULDER,15,
-								 JOINT_LEFT_ELBOW,0,
-								 JOINT_LEFT_HIP,-15,
-								 JOINT_LEFT_KNEE,0,
-
-								 JOINT_NECK_HORIZONTAL,-5,
-
-								 JOINT_TORSO, torsoAngle);
-
-
-			// Bend left knee to get out of the way
-			// and prevent scraping on carpet
-			AddMultiMovement(delay,10,JOINT_RIGHT_SHOULDER,15,
-								 JOINT_RIGHT_ELBOW,15,
-								 JOINT_RIGHT_HIP,-15,
-								 JOINT_RIGHT_KNEE,0,
-
-								 JOINT_LEFT_SHOULDER,-15,
-								 JOINT_LEFT_ELBOW,0,
-								 JOINT_LEFT_HIP,-15,
-								 JOINT_LEFT_KNEE,-10,
-
-								 JOINT_NECK_HORIZONTAL,25,
-
-								 JOINT_TORSO, torsoAngle);
-
-
-			// Right Shoulder forward
-			// Left Hip forward
-			AddMultiMovement(delay,10,JOINT_RIGHT_SHOULDER,15,
-								 JOINT_RIGHT_ELBOW,0,
-								 JOINT_RIGHT_HIP,-15,
-								 JOINT_RIGHT_KNEE,0,
-
-								 JOINT_LEFT_SHOULDER,-15,
-								 JOINT_LEFT_ELBOW,0,
-								 JOINT_LEFT_HIP,25,
-								 JOINT_LEFT_KNEE,-10,
-
-								 JOINT_NECK_HORIZONTAL,25,
-
-								 JOINT_TORSO, torsoAngle);
-
-			//
-			// Left hip stomp
-			// Right front stomp
-			AddMultiMovement(delay,10,JOINT_RIGHT_SHOULDER,15,
-								 JOINT_RIGHT_ELBOW,0,
-								 JOINT_RIGHT_HIP,-15,
-								 JOINT_RIGHT_KNEE,0,
-
-								 JOINT_LEFT_SHOULDER,-15,
-								 JOINT_LEFT_ELBOW,15,
-								 JOINT_LEFT_HIP,15,
-								 JOINT_LEFT_KNEE,0,
-
-								 JOINT_NECK_HORIZONTAL,5,
-
-								 JOINT_TORSO, torsoAngle);
-
-			// Left Shoulder forward
-			// Right Hip forward
-			//bend right knee to prevent scraping
-			AddMultiMovement(delay,10,JOINT_RIGHT_SHOULDER,-15,
-								 JOINT_RIGHT_ELBOW,0,
-								 JOINT_RIGHT_HIP,-15,
-								 JOINT_RIGHT_KNEE,-10,
-
-								 JOINT_LEFT_SHOULDER,15,
-								 JOINT_LEFT_ELBOW,15,
-								 JOINT_LEFT_HIP,-15,
-								 JOINT_LEFT_KNEE,0,
-
-								 JOINT_NECK_HORIZONTAL,-15,
-
-								 JOINT_TORSO, torsoAngle);
-
-		}
-
-
-
-		StartMovement(false);
-	}
 	else if ( behavior.compare("walkForward") == 0 )
 	{
 		ClearMovements();
 		int cycles = atoi(argument.c_str());
+		char *command = "motion command walkForward";
+		int clen = strlen(command);
 
 		cycles = (cycles == 0) ? 1 : cycles;
 		for ( int i = 0; i < cycles; i++ )
 		{
-			AddMovementFromFile("walkForward.csv");
+			serialterm_send(command, clen);
+			Sleep(3250);
 		}
 
-		StartMovement(false);
+		
+	}
+	else if ( behavior.compare("turnRight") == 0 )
+	{
+		ClearMovements();
+		int cycles = atoi(argument.c_str());
+		char *command = "motion command turnRight";
+		int clen = strlen(command);
+
+		cycles = (cycles == 0) ? 1 : cycles;
+		for ( int i = 0; i < cycles; i++ )
+		{
+			serialterm_send(command, clen);
+			Sleep(3400);
+		}
+
+		
+	}
+	else if ( behavior.compare("turnRightHard") == 0 )
+	{
+		ClearMovements();
+		int cycles = atoi(argument.c_str());
+		char *command = "motion command turnRightHard";
+		int clen = strlen(command);
+
+		cycles = (cycles == 0) ? 1 : cycles;
+		for ( int i = 0; i < cycles; i++ )
+		{
+			serialterm_send(command, clen);
+			Sleep(3100);
+		}
+
+		
+	}
+	else if ( behavior.compare("turnLeft") == 0 )
+	{
+		ClearMovements();
+		int cycles = atoi(argument.c_str());
+		char *command = "motion command turnLeft";
+		int clen = strlen(command);
+
+		cycles = (cycles == 0) ? 1 : cycles;
+		for ( int i = 0; i < cycles; i++ )
+		{
+			serialterm_send(command, clen);
+			Sleep(3500);
+		}
+
+		
+	}
+	else if ( behavior.compare("turnLeftHard") == 0 )
+	{
+		ClearMovements();
+		int cycles = atoi(argument.c_str());
+		char *command = "motion command turnLeftHard";
+		int clen = strlen(command);
+
+		cycles = (cycles == 0) ? 1 : cycles;
+		for ( int i = 0; i < cycles; i++ )
+		{
+			serialterm_send(command, clen);
+			Sleep(3600);
+		}
+
+		
 	}
 	else if ( behavior.compare("walkForwardOLD") == 0 )
 	{
@@ -1601,4 +1524,5 @@ void PleoSubsystem::SendMovementData()
 	int size = 16;
 	serialterm_send(m_jointData, size);
 	m_moving = true;
+	
 }

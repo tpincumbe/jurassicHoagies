@@ -64,6 +64,7 @@ void _recv(void*) {
 // Send data over serial port. Non-blocking in asynchronous mode, blocking in synchronous mode
 void serialterm_send(const char* data, int data_size) {
 	char s_data[30] = {0};
+
 	memcpy(s_data, data, data_size);
 	s_data[data_size] = '\n';
 //	m_serial_logFile->out("[OUT] %s",s_data);
