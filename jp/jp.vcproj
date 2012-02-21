@@ -204,6 +204,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RoutePlanner.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SerialTerm.cpp"
 				>
 			</File>
@@ -247,6 +251,10 @@
 			</File>
 			<File
 				RelativePath=".\Queue.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RoutePlanner.h"
 				>
 			</File>
 			<File
