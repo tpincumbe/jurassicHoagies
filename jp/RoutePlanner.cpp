@@ -32,7 +32,7 @@ int getAction(float* pleo_pos, float* target_pos)
 	pleo_unit_y = asin(pleo_ori*0.01745);
 
 	/*Calculate the destination vector (From pleo's position to the target*/
-	destination_vector[0] = target_x - pleo_y;
+	destination_vector[0] = target_x - pleo_x;
 	destination_vector[1] = target_y - pleo_y;
 	
 	/*Calculate the magnitude of the vector (i.e. the displacement needed to travel*/
@@ -52,7 +52,11 @@ int getAction(float* pleo_pos, float* target_pos)
 	
 	/*Calculate the angle difference*/
 	angle_diff = target_angle - pleo_ori;
-	printf("Distance: %f, Turn Angle: %s\n", destination_mag, angle_diff);
+	if (angle_diff < -180.00)
+	{
+		angle_diff += 360;
+	}
+	printf("Distance: %f, Turn Angle: %f\n", destination_mag, angle_diff);
 
 
 	/*Decide what to do next*/

@@ -15,6 +15,7 @@
 #include "PlannerSubsystem.h"
 #include "RoutePlanner.h"
 #include "SerialTerm.h"
+#include "LocsCalc.h"
 
 PlannerSubsystem::PlannerSubsystem(void)
 {
@@ -42,10 +43,25 @@ void PlannerSubsystem::Execute(string behavior, string argument)
 
 	if ( behavior.compare("findFruit") == 0 )
 	{
-		float ppos[] = {0, 0, 0}, tpos[] = {0, 0};
+		bool ff = false;
+		LocsCalc lc;
+		int fcount = 0;
+		float* lcout = lc.detect(ff);
+		float ppos[3], tpos[2];
+		ppos[0] = lcout[0];
+		ppos[1] = lcout[1];
+		ppos[2] = lcout[2];
+		tpos[0] = lcout[3];
+		tpos[1] = lcout[4];
+
 		int action = getAction(ppos, tpos);
 
-		while (0 != action){
+		while (STOP != action){
+			fcount++;
+			if (fcount = 20)
+			{
+				ff = true;
+			}
 			if (WALK_FORWARD == action)
 			{
 				walkForward(1);
@@ -66,6 +82,14 @@ void PlannerSubsystem::Execute(string behavior, string argument)
 			{
 				turnRightHard(1);
 			}
+
+			lcout = lc.detect(ff);
+			ppos[0] = lcout[0];
+			ppos[1] = lcout[1];
+			ppos[2] = lcout[2];
+			tpos[0] = lcout[3];
+			tpos[1] = lcout[4];
+			action = getAction(ppos, tpos);
 		}
 	}
 	else if ( behavior.compare("performSquare") == 0 )

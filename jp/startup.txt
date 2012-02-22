@@ -2,4 +2,3 @@ start pleo
 pleo normalize
 pleo normalize
 start planner
-start camera

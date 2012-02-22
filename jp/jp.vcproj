@@ -180,6 +180,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LocsCalc.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Logger.cpp"
 				>
 			</File>
@@ -231,6 +235,10 @@
 			</File>
 			<File
 				RelativePath=".\ColorBlobDetector.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LocsCalc.h"
 				>
 			</File>
 			<File

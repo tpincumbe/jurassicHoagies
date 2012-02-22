@@ -3,8 +3,8 @@
 #include <stdio.h>
 
 #define ANGLE_ERROR 2.5f
-#define TURN_THRESHOLD 80.00f
-#define REACH_ERROR 5.0f
+#define TURN_THRESHOLD 60.00f
+#define REACH_ERROR 20.0f
 
 #define STOP 0
 #define WALK_FORWARD 1
@@ -13,4 +13,4 @@
 #define SHARP_TURN_LEFT 4
 #define SHARP_TURN_RIGHT 5
 
-int getAction(float*, float*);
+int getAction(float[], float[]);
