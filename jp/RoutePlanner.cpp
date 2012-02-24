@@ -69,9 +69,9 @@ int getAction(float* pleo_pos, float* target_pos)
 	string s;
 	double angle = acos(dp)*180/3.14159;
 
-	if (angle < 5)
+	if (angle <= 2.5)
 		mult = 0;	// go straight
-	else if (angle > 80)
+	else if (angle >= 80)
 		mult = 2;	// hard turn
 
 	if (cp.z() > 0) {
