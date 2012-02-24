@@ -1,10 +1,11 @@
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <iostream>
 #include <stdio.h>
 
 #define ANGLE_ERROR 2.5f
-#define TURN_THRESHOLD 60.00f
-#define REACH_ERROR 20.0f
+#define TURN_THRESHOLD 40.00f
+#define REACH_ERROR 15.0f
 
 #define STOP 0
 #define WALK_FORWARD 1

@@ -28,8 +28,8 @@ int getAction(float* pleo_pos, float* target_pos)
 	target_y = target_pos[1];
 
 	/*Calculate the unit vector for the pleo's direction*/
-	pleo_unit_x = acos(pleo_ori*0.01745);
-	pleo_unit_y = asin(pleo_ori*0.01745);
+	pleo_unit_x = cos(pleo_ori * M_PI / 180);
+	pleo_unit_y = sin(pleo_ori * M_PI / 180);
 
 	/*Calculate the destination vector (From pleo's position to the target*/
 	destination_vector[0] = target_x - pleo_x;
@@ -39,24 +39,29 @@ int getAction(float* pleo_pos, float* target_pos)
 	destination_mag = sqrt(pow(destination_vector[0], 2) + pow(destination_vector[1], 2));
 
 	/*If the pleo has already reached the target, stop the robot*/
-	if(destination_mag < REACH_ERROR)
+	/*if(destination_mag < REACH_ERROR)
     {
 		printf("Reached Destination. Stopping Pleo\n");
 		return STOP;
-	}
+	}*/
 
 	destination_unit[0] = destination_vector[0]/destination_mag;
 	destination_unit[1] = destination_vector[1]/destination_mag;
 
-	target_angle = acos(destination_unit[0]) * 57.2958; /*or: asin(destination_unit[1]);*/
+	target_angle = acos(destination_unit[0]) * 180 / M_PI; /*or: asin(destination_unit[1]);*/
+
+	if (destination_vector[1] < 0)
+		target_angle = -target_angle + 360;
+	
+	//printf("DU0: %f, DU1: %f, Target Angle: %f\n", destination_unit[0], destination_unit[1], target_angle);
 	
 	/*Calculate the angle difference*/
-	angle_diff = target_angle - pleo_ori;
-	if (angle_diff < -180.00)
-	{
+	angle_diff = pleo_ori - target_angle;
+	if (angle_diff > 180)
+		angle_diff -= 360;
+	else if (angle_diff < -180)
 		angle_diff += 360;
-	}
-	printf("Distance: %f, Turn Angle: %f\n", destination_mag, angle_diff);
+	//printf("Distance: %f, Turn Angle: %f\n", destination_mag, angle_diff);
 
 
 	/*Decide what to do next*/
@@ -67,25 +72,25 @@ int getAction(float* pleo_pos, float* target_pos)
 		if(abs(angle_diff) > TURN_THRESHOLD)
         {
 			/*Sharp Turn Right (possibly in place)*/
-			printf("TURN sharply to the RIGHT\n");
-			return SHARP_TURN_RIGHT;
+			printf("TURN sharply to the LEFT\n");
+			return SHARP_TURN_LEFT;
 		}
 		
 		/*Veer Right*/
-		printf("VEER to the RIGHT\n");
-		return VEER_RIGHT;
+		printf("VEER to the LEFT\n");
+		return VEER_LEFT;
         
 	} else if(angle_diff > ANGLE_ERROR) /*If the angle difference is more than the angle threshold*/
         {
 			if(abs(angle_diff) > TURN_THRESHOLD)
 				{
 					/*Sharp Turn Left (possibly in place)*/
-					printf("TURN sharply to the LEFT\n");
-					return SHARP_TURN_LEFT;
+					printf("TURN sharply to the RIGHT\n");
+					return SHARP_TURN_RIGHT;
                 }
                 /*Veer Left*/
-				printf("VEER to the LEFT\n");
-				return VEER_LEFT;
+				printf("VEER to the RIGHT\n");
+				return VEER_RIGHT;
 	} else { /*If the difference is within the angle error, keep true*/
 		/*Walk forward*/
 		printf("Walk FORWARD\n");
