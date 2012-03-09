@@ -1,4 +1,8 @@
 start pleo
 pleo normalize
+
 pleo normalize
+
 start planner
+start camera
+camera local capture 0
