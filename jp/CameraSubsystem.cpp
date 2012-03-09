@@ -49,7 +49,10 @@ void CameraSubsystem::Tick(size_t tick)
 
 	if ( m_localcapture == true )
 	{
-		cbd.trace();
+		VideoCapture camera(0);
+		Mat camImage;
+		camera >> camImage;
+		imshow("camera", camImage);
 	}
 }
 
@@ -70,7 +73,14 @@ void CameraSubsystem::Execute(string behavior, string argument)
 	}
 	else if ( behavior.compare("startTracking") == 0 )
 	{
-		cbd.resetPath(argument);
+		if (0 == argument.compare("fruit"))
+		{
+			lc.resetPath();
+			lc.detect();
+		}else
+		{
+			cbd.resetPath(argument);
+		}
 	}
 	else if ( behavior.compare("quit") == 0 )
 	{

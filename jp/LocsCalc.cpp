@@ -2,63 +2,19 @@
 #include <stdlib.h>
 #include "LocsCalc.h"
 
-float* LocsCalc::detect(bool ffruit) {
+LocsCalc::LocsCalc() {
+	
+}
 
+LocsCalc::~LocsCalc() {
+	cvDestroyAllWindows();
+}
+
+void LocsCalc::detect() {
 	VideoCapture webCam(0); // video source for webcam
 	
 	webCam.set(CV_CAP_PROP_FRAME_WIDTH,640);
 	webCam.set(CV_CAP_PROP_FRAME_HEIGHT,480);
-	
-	// slices matrcies that hold H,S and V
-	vector<Mat> wslices;
-	vector<Mat> pslices;
-	vector<Mat> aslices;
-	
-	// create matrices to hold image
-	Mat camImage;		// raw image from webcam
-	Mat hsvImage;		// hsv image
-	Mat whsv;			// hsv image
-	Mat phsv;			// hsv image
-	Mat ahsv;			// hsv image
-	Mat whue;			// hue channel
-	Mat phue;			// hue channel
-	Mat ahue;			// hue channel
-	Mat whl;			// Hue lower bound
-	Mat whh;			// Hue upper bound
-	Mat phl;			// Hue lower bound
-	Mat phh;			// Hue upper bound
-	Mat ahl;			// Hue lower bound
-	Mat ahh;			// Hue upper bound
-	Mat wh;				// hue color filtering
-	Mat ph;				// hue color filtering
-	Mat ah;				// hue color filtering
-	Mat wsat;			// Sat channel
-	Mat psat;			// Sat channel
-	Mat asat;			// Sat channel
-	Mat wsl;			// sat lower bound
-	Mat wsh;			// Sat upper bound
-	Mat psl;			// sat lower bound
-	Mat psh;			// Sat upper bound
-	Mat asl;			// sat lower bound
-	Mat ash;			// Sat upper bound
-	Mat ws;				// sat color filtering
-	Mat ps;				// sat color filtering
-	Mat as;				// sat color filtering
-	Mat wval;			// Val channel
-	Mat pval;			// Val channel
-	Mat aval;			// Val channel
-	Mat wvl;			// Val lower bound
-	Mat wvh;			// Val upper bound
-	Mat pvl;			// Val lower bound
-	Mat pvh;			// Val upper bound
-	Mat avl;			// Val lower bound
-	Mat avh;			// Val upper bound
-	Mat wv;				// Val color filtering
-	Mat pv;				// Val color filtering
-	Mat av;				// Val color filtering
-	Mat wHSV;			// HSV color fiter detected
-	Mat pHSV;			// HSV color fiter detected
-	Mat aHSV;			// HSV color fiter detected
 
 	SimpleBlobDetector::Params params;
 	params.minThreshold = 0;
@@ -77,9 +33,6 @@ float* LocsCalc::detect(bool ffruit) {
 	params.filterByArea = false;
 	SimpleBlobDetector blobDetector( params );
 	blobDetector.create("SimpleBlob");
-	
-	vector<KeyPoint> permKeyPoints;
-	vector<KeyPoint> keyPoints;
 
 	// get new image over and over from webcam
 	webCam >> camImage;
@@ -190,11 +143,7 @@ float* LocsCalc::detect(bool ffruit) {
 	//printf("\n");
 	circle(camImage, Point2f(xfruit, 480 - yfruit), 20, cvScalar(0,0,255));
 	
-	imshow("Webcam Orignal", camImage);
-//	imshow("HSV",wHSV);
-//	imshow("HSV2",pHSV);
-//	imshow("HSV3",aHSV);
-	cvWaitKey(5);
+	showImages();
 
 	float orient = calcOrient(xpleofront, ypleofront, xpleorear, ypleorear);
 
@@ -208,14 +157,10 @@ float* LocsCalc::detect(bool ffruit) {
 
 	//printf("%f", temp);
 	//system("pause");
-	float* out;
-	out = (float*) malloc(sizeof(float) * 5);
-	out[0] = pleo[0];
-	out[1] = pleo[1];
-	out[2] = pleo[2];
-	out[3] = fruit[0];
-	out[4] = fruit[1];
-	return out;
+	
+	rp.performAction(pleo, fruit);
+
+	cvWaitKey(1);
 }
 
 float LocsCalc::calcOrient(float xpf, float ypf, float xpr, float ypr) {
@@ -223,4 +168,15 @@ float LocsCalc::calcOrient(float xpf, float ypf, float xpr, float ypr) {
 		return atan2(ypf-ypr,xpf-xpr) * 180 / M_PI;
 	else
 		return atan2(ypf-ypr,xpf-xpr) * 180 / M_PI + 360;
+}
+
+void LocsCalc::resetPath() {
+	cvDestroyAllWindows();
+}
+
+void LocsCalc::showImages(){
+	imshow("Webcam Orignal", camImage);
+//	imshow("HSV",wHSV);
+//	imshow("HSV2",pHSV);
+//	imshow("HSV3",aHSV);
 }

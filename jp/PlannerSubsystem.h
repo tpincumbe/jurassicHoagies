@@ -27,9 +27,4 @@ public:
 private:
 	vector<string> m_pleoSequence;
 	size_t m_currentSequence;
-	void walkForward(int cycles);
-	void turnRight(int cycles);
-	void turnRightHard(int cycles);
-	void turnLeft(int cycles);
-	void turnLeftHard(int cycles);
 };

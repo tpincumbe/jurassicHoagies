@@ -13,9 +13,7 @@
 //
 //--------------------------------------------------------------------
 #include "PlannerSubsystem.h"
-#include "RoutePlanner.h"
 #include "SerialTerm.h"
-#include "LocsCalc.h"
 
 PlannerSubsystem::PlannerSubsystem(void)
 {
@@ -43,54 +41,14 @@ void PlannerSubsystem::Execute(string behavior, string argument)
 
 	if ( behavior.compare("findFruit") == 0 )
 	{
-		bool ff = false;
-		LocsCalc lc;
-		int fcount = 0;
-		float* lcout = lc.detect(ff);
-		float ppos[3], tpos[2];
-		ppos[0] = lcout[0];
-		ppos[1] = lcout[1];
-		ppos[2] = lcout[2];
-		tpos[0] = lcout[3];
-		tpos[1] = lcout[4];
-
-		int action = getAction(ppos, tpos);
-
-		while (STOP != action){
-			fcount++;
-			if (fcount = 20)
-			{
-				ff = true;
-			}
-			if (WALK_FORWARD == action)
-			{
-				walkForward(1);
-			}
-			else if (VEER_LEFT == action)
-			{
-				turnLeft(1);
-			}
-			else if (VEER_RIGHT == action)
-			{
-				turnRight(1);
-			}
-			else if (SHARP_TURN_LEFT == action)
-			{
-				turnLeftHard(1);
-			}
-			else if (SHARP_TURN_RIGHT == action)
-			{
-				turnRightHard(1);
-			}
-
-			lcout = lc.detect(ff);
-			ppos[0] = lcout[0];
-			ppos[1] = lcout[1];
-			ppos[2] = lcout[2];
-			tpos[0] = lcout[3];
-			tpos[1] = lcout[4];
-			action = getAction(ppos, tpos);
-		}
+		// Let the camera subsystem know that we are about to perform a square maneuver, so it
+		// needs to draw an expected path and then start tracking.
+		vector<string> cameraMsg;
+		cameraMsg.push_back("camera");
+		cameraMsg.push_back("startTracking");
+		cameraMsg.push_back("fruit");
+		SendMessage("camera",cameraMsg);
+		
 	}
 	else if ( behavior.compare("performSquare") == 0 )
 	{
@@ -223,65 +181,4 @@ void PlannerSubsystem::Execute(string behavior, string argument)
 string PlannerSubsystem::MonitorMessage()
 {
 	return "";
-}
-
-
-void PlannerSubsystem::walkForward(int cycles)
-{
-	char *command = "motion command walkForward";
-	int clen = strlen(command);
-
-	for ( int i = 0; i < cycles; i++ )
-	{
-		serialterm_send(command, clen);
-		Sleep(3250);
-	}
-}
-
-void PlannerSubsystem::turnRight(int cycles)
-{
-	char *command = "motion command turnRight";
-	int clen = strlen(command);
-
-	for ( int i = 0; i < cycles; i++ )
-	{
-		serialterm_send(command, clen);
-		Sleep(3400);
-	}
-}
-
-void PlannerSubsystem::turnRightHard(int cycles)
-{
-	char *command = "motion command turnRightHard";
-	int clen = strlen(command);
-
-	for ( int i = 0; i < cycles; i++ )
-	{
-		serialterm_send(command, clen);
-		Sleep(3100);
-	}
-}
-
-void PlannerSubsystem::turnLeft(int cycles)
-{
-	char *command = "motion command turnLeft";
-	int clen = strlen(command);
-
-	for ( int i = 0; i < cycles; i++ )
-	{
-		serialterm_send(command, clen);
-		Sleep(3500);
-	}
-}
-
-void PlannerSubsystem::turnLeftHard(int cycles)
-{
-	char *command = "motion command turnLeftHard";
-	int clen = strlen(command);
-
-	for ( int i = 0; i < cycles; i++ )
-	{
-		serialterm_send(command, clen);
-		Sleep(3600);
-	}
 }

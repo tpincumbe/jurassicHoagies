@@ -15,6 +15,7 @@
 #pragma once
 #include "subsystem.h"
 #include "ColorBlobDetector.h"
+#include "LocsCalc.h"
 #include <vector>
 using namespace std;
 
@@ -36,4 +37,5 @@ private:
 	vector<vector<int>> m_expectedPath;
 	vector<vector<int>> m_locations;
 	ColorBlobDetector cbd;
+	LocsCalc lc;
 };

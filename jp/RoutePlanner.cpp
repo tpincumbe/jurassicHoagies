@@ -1,5 +1,6 @@
 /*Route planner for Project 2.*/
 #include "RoutePlanner.h"
+#include "subsystem.h"
 #include <iostream>
 
 #include "Eigen/Core"
@@ -15,7 +16,41 @@ returns a string
 using namespace Eigen;
 using namespace std;
 
-int getAction(float* pleo_pos, float* target_pos)
+void RoutePlanner::performAction(float* pleo_position, float* fruit_position){
+	vector<string> actMsg;
+	int action = getAction(pleo_position, fruit_position);
+
+	actMsg.push_back("pleo");
+
+	if (WALK_FORWARD == action)
+	{
+		actMsg.push_back("walkForward");
+	}
+	else if (VEER_LEFT == action)
+	{
+		actMsg.push_back("turnLeft");
+	}
+	else if (VEER_RIGHT == action)
+	{
+		actMsg.push_back("turnRight");
+	}
+	else if (SHARP_TURN_LEFT == action)
+	{
+		actMsg.push_back("turnLeftHard");
+	}
+	else if (SHARP_TURN_RIGHT == action)
+	{
+		actMsg.push_back("turnRightHard");
+	}else if (STOP == action)
+	{
+		actMsg.push_back("normalize");
+	}
+
+	actMsg.push_back("1");
+	SendMessage("pleo", actMsg);
+}
+
+int RoutePlanner::getAction(float* pleo_pos, float* target_pos)
 {
 	float pleo_x, pleo_y, pleo_ori, target_x, target_y;
 	float destination_vector[2];
@@ -86,6 +121,7 @@ int getAction(float* pleo_pos, float* target_pos)
 		s += " sharply";
 
 	cout << "Turn " << angle << " degrees " << s << " Distance Away: " << destination_mag << endl;
+
 
 	/*Decide what to do next*/
 

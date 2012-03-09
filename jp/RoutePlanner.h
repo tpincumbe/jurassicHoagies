@@ -14,4 +14,11 @@
 #define SHARP_TURN_LEFT 4
 #define SHARP_TURN_RIGHT 5
 
-int getAction(float[], float[]);
+
+class RoutePlanner
+{
+public:
+	int performAction(float* p, float* t);
+private:
+	int getAction(float[], float[]);
+};
