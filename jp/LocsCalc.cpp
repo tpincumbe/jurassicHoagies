@@ -23,6 +23,7 @@ LocsCalc::LocsCalc() : webCam(0) {
 	params.filterByConvexity = false;
 	params.filterByArea = false;
 	blobDetector = SimpleBlobDetector(params);
+	blobDetector.create("SimpleBlob");
 }
 
 LocsCalc::~LocsCalc() {
@@ -39,7 +40,7 @@ void LocsCalc::grabObstacles() {
 }
 
 vector<string> LocsCalc::detect(int project) {
-	blobDetector.create("SimpleBlob");
+	vector<string> msg;
 
 	// get new image from webcam
 	webCam >> camImage;
@@ -168,10 +169,11 @@ vector<string> LocsCalc::detect(int project) {
 	
 	if (project <= 2) {
 		// pass relevant information to route planner
-		return rp.performAction(pleo, fruit);
+		msg = rp.performAction(pleo, fruit);
 	}
 	
 	cvWaitKey(1);
+	return msg;
 }
 
 float LocsCalc::calcOrient(float xpf, float ypf, float xpr, float ypr) {

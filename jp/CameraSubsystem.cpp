@@ -76,8 +76,15 @@ void CameraSubsystem::Execute(string behavior, string argument)
 		if (0 == argument.compare("fruit"))
 		{
 			lc.resetPath();
-			vector<string> actMsg = lc.detect(2);
-			SendMessage("pleo",actMsg);
+			vector<string> actMsg;
+			while (1){
+				actMsg = lc.detect(2);
+				if (0 == actMsg[1].compare("normalize")){
+					break;
+					SendMessage("pleo",actMsg);
+				}else
+					SendMessage("pleo",actMsg);
+			}
 		}else
 		{
 			//cbd.resetPath(argument);
