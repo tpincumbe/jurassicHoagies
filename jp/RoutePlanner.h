@@ -19,10 +19,13 @@
 class RoutePlanner : public Subsystem
 {
 public:
+<<<<<<< HEAD
 	void Tick(size_t tick);
 	void Execute(string behavior, string argument);
 	void Shutdown();
 	string MonitorMessage();
+=======
+>>>>>>> 5c72f1734b64dd740cfa9fd0328f64c84150df91
 	void performAction(float* p, float* t);
 private:
 	int getAction(float[], float[]);
