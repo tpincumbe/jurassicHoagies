@@ -36,6 +36,6 @@ private:
 	CvCapture *m_capture;
 	vector<vector<int>> m_expectedPath;
 	vector<vector<int>> m_locations;
-	ColorBlobDetector cbd;
+	//ColorBlobDetector cbd;
 	LocsCalc lc;
 };

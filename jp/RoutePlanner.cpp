@@ -13,7 +13,7 @@ returns a string
 using namespace Eigen;
 using namespace std;
 
-void RoutePlanner::performAction(float* pleo_position, float* fruit_position){
+vector<string> RoutePlanner::performAction(float* pleo_position, float* fruit_position) {
 	vector<string> actMsg;
 	int action = getAction(pleo_position, fruit_position);
 
@@ -44,7 +44,8 @@ void RoutePlanner::performAction(float* pleo_position, float* fruit_position){
 	}
 
 	actMsg.push_back("1");
-	SendMessage("pleo", actMsg);
+	return actMsg;
+	//SendMessage("pleo", actMsg);
 }
 
 int RoutePlanner::getAction(float* pleo_pos, float* target_pos)
