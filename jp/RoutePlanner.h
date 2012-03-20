@@ -18,7 +18,7 @@
 class RoutePlanner
 {
 public:
-	int performAction(float* p, float* t);
+	void performAction(float* p, float* t);
 private:
 	int getAction(float[], float[]);
 };

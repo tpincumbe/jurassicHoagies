@@ -2,21 +2,12 @@
 #include <stdlib.h>
 #include "LocsCalc.h"
 
-LocsCalc::LocsCalc() {
-	
-}
-
-LocsCalc::~LocsCalc() {
-	cvDestroyAllWindows();
-}
-
-void LocsCalc::detect() {
-	VideoCapture webCam(0); // video source for webcam
-	
+LocsCalc::LocsCalc() : webCam(0) {
+	// Initialize Camera
 	webCam.set(CV_CAP_PROP_FRAME_WIDTH,640);
 	webCam.set(CV_CAP_PROP_FRAME_HEIGHT,480);
-
-	SimpleBlobDetector::Params params;
+	
+	// Initialize Blob Detector
 	params.minThreshold = 0;
 	params.maxThreshold = 255;
 	params.thresholdStep = 5;
@@ -31,25 +22,40 @@ void LocsCalc::detect() {
 	params.filterByInertia = false;
 	params.filterByConvexity = false;
 	params.filterByArea = false;
-	SimpleBlobDetector blobDetector( params );
+	blobDetector = SimpleBlobDetector(params);
 	blobDetector.create("SimpleBlob");
+}
 
-	// get new image over and over from webcam
+LocsCalc::~LocsCalc() {
+	cvDestroyAllWindows();
+}
+
+void LocsCalc::grabBackground() {
+	webCam >> background;
+}
+
+void LocsCalc::grabObstacles() {
+	webCam >> camImage;
+	absdiff(background, camImage, obstacles);
+}
+
+void LocsCalc::detect(int project) {
+	// get new image from webcam
 	webCam >> camImage;
 	
-	// conver raw image to hsv
+	// convert raw image to hsv
 	cvtColor (camImage, hsvImage, CV_RGB2HSV);
-
+	
 	// blur images
 	blur(hsvImage, whsv, Size(WHITEB,WHITEB));
 	blur(hsvImage, phsv, Size(PINKB,PINKB));
 	blur(hsvImage, ahsv, Size(APPLEB,APPLEB));
-
+	
 	// split image to H,S and V images
 	split(whsv,wslices);
 	split(phsv,pslices);
 	split(ahsv,aslices);
-
+	
 	wslices[0].copyTo(whue); // get the hue channel
 	wslices[1].copyTo(wsat); // get the sat channel
 	wslices[2].copyTo(wval); // get the V channel
@@ -59,113 +65,119 @@ void LocsCalc::detect() {
 	aslices[0].copyTo(ahue); // get the hue channel
 	aslices[1].copyTo(asat); // get the sat channel
 	aslices[2].copyTo(aval); // get the V channel
-
+	
 	//apply threshold HUE upper/lower for color range
-	threshold (whue,whl,WHITEHL,255, CV_THRESH_BINARY); // get lower bound
-	threshold (whue,whh,WHITEHH,255, CV_THRESH_BINARY_INV); // get upper bound
-	wh = whl &whh; // multiply 2 matrix to get the color range
-	threshold (phue,phl,PINKHL,255, CV_THRESH_BINARY); // get lower bound
-	threshold (phue,phh,PINKHH,255, CV_THRESH_BINARY_INV); // get upper bound
-	ph = phl &phh; // multiply 2 matrix to get the color range
-	threshold (ahue,ahl,APPLEHL,255, CV_THRESH_BINARY); // get lower bound
-	threshold (ahue,ahh,APPLEHH,255, CV_THRESH_BINARY_INV); // get upper bound
-	ah = ahl &ahh; // multiply 2 matrix to get the color range
-
-	// apply thresshold for Sat channel
-	threshold (wsat,wsl,WHITESL,255, CV_THRESH_BINARY); // get lower bound
-	threshold (wsat,wsh,WHITESH,255, CV_THRESH_BINARY_INV); // get upper bound
-	ws = wsl &wsh; // multiply 2 matrix to get the color range
-	threshold (psat,psl,PINKSL,255, CV_THRESH_BINARY); // get lower bound
-	threshold (psat,psh,PINKSH,255, CV_THRESH_BINARY_INV); // get upper bound
-	ps = psl &psh; // multiply 2 matrix to get the color range
-	threshold (asat,asl,APPLESL,255, CV_THRESH_BINARY); // get lower bound
-	threshold (asat,ash,APPLESH,255, CV_THRESH_BINARY_INV); // get upper bound
-	as = asl &ash; // multiply 2 matrix to get the color range
-
+	threshold (whue,lb,WHITEHL,255, CV_THRESH_BINARY); // get lower bound
+	threshold (whue,hb,WHITEHH,255, CV_THRESH_BINARY_INV); // get upper bound
+	whue = lb & hb; // multiply 2 matrix to get the color range
+	threshold (phue,lb,PINKHL,255, CV_THRESH_BINARY);
+	threshold (phue,hb,PINKHH,255, CV_THRESH_BINARY_INV);
+	phue = lb & hb;
+	threshold (ahue,lb,APPLEHL,255, CV_THRESH_BINARY);
+	threshold (ahue,hb,APPLEHH,255, CV_THRESH_BINARY_INV);
+	ahue = lb & hb;
+	
+	// apply threshold for Sat channel
+	threshold (wsat,lb,WHITESL,255, CV_THRESH_BINARY);
+	threshold (wsat,hb,WHITESH,255, CV_THRESH_BINARY_INV);
+	wsat = lb & hb;
+	threshold (psat,lb,PINKSL,255, CV_THRESH_BINARY);
+	threshold (psat,hb,PINKSH,255, CV_THRESH_BINARY_INV);
+	psat = lb & hb;
+	threshold (asat,lb,APPLESL,255, CV_THRESH_BINARY);
+	threshold (asat,hb,APPLESH,255, CV_THRESH_BINARY_INV);
+	asat = lb & hb;
+	
 	// apply thresshold for Val channel
-	threshold (wval,wvl,WHITEVL,255, CV_THRESH_BINARY); // get lower bound
-	threshold (wval,wvh,WHITEVH,255, CV_THRESH_BINARY_INV); // get upper bound
-	wv = wvl &wvh; // multiply 2 matrix to get the color range
-	threshold (pval,pvl,PINKVL,255, CV_THRESH_BINARY); // get lower bound
-	threshold (pval,pvh,PINKVH,255, CV_THRESH_BINARY_INV); // get upper bound
-	pv = pvl &pvh; // multiply 2 matrix to get the color range
-	threshold (aval,avl,APPLEVL,255, CV_THRESH_BINARY); // get lower bound
-	threshold (aval,avh,APPLEVH,255, CV_THRESH_BINARY_INV); // get upper bound
-	av = avl &avh; // multiply 2 matrix to get the color range
-
+	threshold (wval,lb,WHITEVL,255, CV_THRESH_BINARY);
+	threshold (wval,hb,WHITEVH,255, CV_THRESH_BINARY_INV);
+	wval = lb & hb;
+	threshold (pval,lb,PINKVL,255, CV_THRESH_BINARY);
+	threshold (pval,hb,PINKVH,255, CV_THRESH_BINARY_INV);
+	pval = lb & hb;
+	threshold (aval,lb,APPLEVL,255, CV_THRESH_BINARY);
+	threshold (aval,hb,APPLEVH,255, CV_THRESH_BINARY_INV);
+	aval = lb & hb;
+	
 	// combine sat, val and hue filter together
-	wHSV = wh & ws & wv;
-	pHSV = ph & ps & pv;
-	aHSV = ah & as & av;
-
-	blobDetector.detect(wHSV, keyPoints);
+	whsv = whue & wsat & wval;
+	phsv = phue & psat & pval;
+	ahsv = ahue & asat & aval;
+	
+	// find white-colored blobs
+	blobDetector.detect(whsv, keyPoints);
 	float size = 0;
+	
+	// locate largest blob
 	for(int i=0; i<keyPoints.size(); i++) {
 		if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
 			xpleorear = keyPoints[i].pt.x;
 			ypleorear = 480 - keyPoints[i].pt.y;
 			size = keyPoints[i].size;
 		}
-		//printf("rear size: %f \n", keyPoints[i].size);
+		
 		permKeyPoints.push_back(keyPoints[i]);
 	}
+	
+	// circle pleo rear on camera
 	circle(camImage, Point2f(xpleorear, 480 - ypleorear), 20, cvScalar(0,0,255));
-
-	blobDetector.detect(pHSV, keyPoints);
+	
+	// find pink-colored blobs
+	blobDetector.detect(phsv, keyPoints);
 	size = 0;
-	//printf("%d",keyPoints.size());
+	
 	for(int i=0; i<keyPoints.size(); i++) {
-		//printf(" X: %f Y: %f Point Size: %f", keyPoints[i].pt.x, keyPoints[i].pt.y, keyPoints[i].size);
 		if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
 			xpleofront = keyPoints[i].pt.x;
 			ypleofront = 480 - keyPoints[i].pt.y;
 			size = keyPoints[i].size;
 		}
-		//printf("front size: %f \n", keyPoints[i].size);
+		
 		permKeyPoints.push_back(keyPoints[i]);
 	}
-	//printf(" X: %f Y: %f Size: %f\n", xpleofront, ypleofront, size);
+	
+	// circle pleo front on camera
 	circle(camImage, Point2f(xpleofront, 480 - ypleofront), 20, cvScalar(0,0,255));
-
-	blobDetector.detect(aHSV, keyPoints);
+	
+	// find apple-colored blobs
+	blobDetector.detect(ahsv, keyPoints);
 	size = 0;
-	//printf("%d",keyPoints.size());
+	
 	for(int i=0; i<keyPoints.size(); i++) {
-		//printf(" Point Size: %f", keyPoints[i].size);
 		if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
 			xfruit = keyPoints[i].pt.x;
 			yfruit = 480 - keyPoints[i].pt.y;
 			size = keyPoints[i].size;
 		}
-		//printf("apple size: %f \n", keyPoints[i].size);
+		
 		permKeyPoints.push_back(keyPoints[i]);
 	}
-	//printf("\n");
+	
+	// circle apple on camera
 	circle(camImage, Point2f(xfruit, 480 - yfruit), 20, cvScalar(0,0,255));
 	
+	// display locations in video feed
 	showImages();
-
+	
+	// calculate the pleo's orientation
 	float orient = calcOrient(xpleofront, ypleofront, xpleorear, ypleorear);
-
-	//printf("Orientation: %f\n", orient);
-
+	
 	float pleo[3] = {(xpleofront + xpleorear) / 2, (ypleofront + ypleorear) / 2, orient};
 	float fruit[2] = {xfruit, yfruit};
-
-	//printf("%f", temp);
-	//system("pause");
-
-	//printf("%f", temp);
-	//system("pause");
 	
-	rp.performAction(pleo, fruit);
-
+	if (project <= 2) {
+		// pass relevant information to route planner
+		rp.performAction(pleo, fruit);
+	}
+	
 	cvWaitKey(1);
 }
 
 float LocsCalc::calcOrient(float xpf, float ypf, float xpr, float ypr) {
+	// if the front is above the back, return a value between 0 and 180
 	if (ypf > ypr)
 		return atan2(ypf-ypr,xpf-xpr) * 180 / M_PI;
+	// otherwise, return a value between 180 and 360
 	else
 		return atan2(ypf-ypr,xpf-xpr) * 180 / M_PI + 360;
 }
@@ -176,7 +188,7 @@ void LocsCalc::resetPath() {
 
 void LocsCalc::showImages(){
 	imshow("Webcam Orignal", camImage);
-//	imshow("HSV",wHSV);
-//	imshow("HSV2",pHSV);
-//	imshow("HSV3",aHSV);
+//	imshow("HSV",whsv);
+//	imshow("HSV2",phsv);
+//	imshow("HSV3",ahsv);
 }
