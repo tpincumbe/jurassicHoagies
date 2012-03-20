@@ -183,7 +183,7 @@ void PleoSubsystem::Tick(size_t tick)
 		m_lastMovementTick = tick;
 	}
 
-	UpdateStatusDisplay();
+	//UpdateStatusDisplay();
 }
 
 void PleoSubsystem::Execute(string behavior, string argument)
