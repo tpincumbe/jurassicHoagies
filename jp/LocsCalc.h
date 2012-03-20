@@ -43,7 +43,7 @@ public:
 	
 	void grabBackground();
 	void grabObstacles();
-	void detect(int project);
+	vector<string> detect(int project);
 	LocsCalc();
 	~LocsCalc();
 
