@@ -76,7 +76,7 @@ void CameraSubsystem::Execute(string behavior, string argument)
 		if (0 == argument.compare("fruit"))
 		{
 			lc.resetPath();
-			lc.detect();
+			lc.detect(3);
 		}else
 		{
 			cbd.resetPath(argument);
