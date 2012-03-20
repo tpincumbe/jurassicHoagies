@@ -80,8 +80,8 @@ void CameraSubsystem::Execute(string behavior, string argument)
 			while (1){
 				actMsg = lc.detect(2);
 				if (0 == actMsg[1].compare("normalize")){
-					break;
 					SendMessage("pleo",actMsg);
+					break;
 				}else
 					SendMessage("pleo",actMsg);
 			}
