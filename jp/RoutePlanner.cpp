@@ -1,8 +1,5 @@
 /*Route planner for Project 2.*/
 #include "RoutePlanner.h"
-#include "subsystem.h"
-#include <iostream>
-
 #include "Eigen/Core"
 #include "Eigen/Eigen"
 
@@ -144,3 +141,8 @@ int RoutePlanner::getAction(float* pleo_pos, float* target_pos)
 	}
 
 }
+
+void RoutePlanner::Tick(size_t tick){}
+void RoutePlanner::Execute(string behavior, string argument){}
+void RoutePlanner::Shutdown(){}
+string RoutePlanner::MonitorMessage(){return NULL;}

@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <stdio.h>
+#include "Subsystem.h"
 
 #define ANGLE_ERROR 2.5f
 #define TURN_THRESHOLD 40.00f
@@ -15,10 +16,14 @@
 #define SHARP_TURN_RIGHT 5
 
 
-class RoutePlanner
+class RoutePlanner : public Subsystem
 {
 public:
-	int performAction(float* p, float* t);
+	void Tick(size_t tick);
+	void Execute(string behavior, string argument);
+	void Shutdown();
+	string MonitorMessage();
+	void performAction(float* p, float* t);
 private:
 	int getAction(float[], float[]);
 };

@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;C:\Users\v0rt3x86\Documents\Visual Studio 2008\eigen-eigen-6e7488e20373\Eigen\src\Core&quot;;&quot;C:\Users\v0rt3x86\Documents\Visual Studio 2008\eigen-eigen-6e7488e20373\Eigen\src&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,6 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="wsock32.lib libcurl.lib opencv_core231d.lib opencv_imgproc231d.lib opencv_highgui231d.lib opencv_ml231d.lib opencv_video231d.lib opencv_features2d231d.lib opencv_calib3d231d.lib opencv_objdetect231d.lib opencv_contrib231d.lib opencv_legacy231d.lib opencv_flann231d.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;C:\Users\v0rt3x86\Documents\Visual Studio 2008\eigen-eigen-6e7488e20373\Eigen\src\Core&quot;;&quot;C:\Users\v0rt3x86\Documents\Visual Studio 2008\eigen-eigen-6e7488e20373\Eigen\src&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
