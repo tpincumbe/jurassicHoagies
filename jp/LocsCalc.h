@@ -43,7 +43,7 @@ public:
 	
 	void grabBackground();
 	void grabObstacles();
-	vector<string> detect(int project);
+	void detect(int project, SystemQueue *msq);
 	LocsCalc();
 	~LocsCalc();
 

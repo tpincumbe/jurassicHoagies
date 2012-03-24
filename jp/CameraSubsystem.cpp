@@ -77,14 +77,8 @@ void CameraSubsystem::Execute(string behavior, string argument)
 		{
 			lc.resetPath();
 			vector<string> actMsg;
-			while (1){
-				actMsg = lc.detect(2);
-				if (0 == actMsg[1].compare("normalize")){
-					SendMessage("pleo",actMsg);
-					break;
-				}else
-					SendMessage("pleo",actMsg);
-			}
+
+			lc.detect(2, m_sysQueue);	
 		}else
 		{
 			//cbd.resetPath(argument);
