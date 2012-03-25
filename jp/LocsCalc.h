@@ -72,7 +72,10 @@ private:
 
 	// background subtraction matrices
 	Mat background;		// background image
-	Mat obstacles;		// background image
+	Mat obstacles;		// obstacles
+	Mat fullBackground;	// background and obstacles
+	Mat pleoApplePos;	// image - background and obstacles
+	Mat obstacleGrid;	// image - background and obstacles
 	
 	// matrices for blob detection
 	Mat hsvImage;		// hsv image

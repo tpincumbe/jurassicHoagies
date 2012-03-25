@@ -31,12 +31,34 @@ LocsCalc::~LocsCalc() {
 }
 
 void LocsCalc::grabBackground() {
-	webCam >> background;
+	webCam >> camImage;
+	camImage.copyTo(background);
+
+	printf("");
 }
 
 void LocsCalc::grabObstacles() {
 	webCam >> camImage;
 	absdiff(background, camImage, obstacles);
+	camImage.copyTo(fullBackground);
+
+	obstacleGrid = Mat(obstacles.size().height, obstacles.size().width, CV_8UC1);
+
+	int r;
+	int g;
+	int b;
+	for (int i = 0; i < obstacles.size().height; i ++) {
+		for (int j = 0; j < obstacles.size().width; j ++ ) {
+			r = obstacles.data[i * obstacles.size().width + j * 3];
+			g = obstacles.data[i * obstacles.size().width + j * 3 + 1];
+			b = obstacles.data[i * obstacles.size().width + j * 3 + 2];
+			if (r | g | b > 20) {
+				obstacleGrid.data[i * j] = 1;
+			} else {
+				obstacleGrid.data[i * j] = 0;
+			}
+		}
+	}
 }
 
 void LocsCalc::detect(int project, SystemQueue *msq) {
@@ -45,6 +67,11 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 	while(1){
 		// get new image from webcam
 		webCam >> camImage;
+
+		if (project >= 3) {
+			// find image sans background + obstacles
+			absdiff(fullBackground, camImage, pleoApplePos);
+		}
 		
 		// convert raw image to hsv
 		cvtColor (camImage, hsvImage, CV_RGB2HSV);
@@ -106,6 +133,13 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		whsv = whue & wsat & wval;
 		phsv = phue & psat & pval;
 		ahsv = ahue & asat & aval;
+
+		if (project >= 3) {
+			// combine hsv images with subtracted background
+			whsv &= pleoApplePos;
+			phsv &= pleoApplePos;
+			ahsv &= pleoApplePos;
+		}
 
 		// find white-colored blobs
 		blobDetector.detect(whsv, keyPoints);
@@ -173,15 +207,12 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		if (project <= 2) {
 			// pass relevant information to route planner
 			msq->PushMessage("pleo", msg);
-			
 		}
 
 		if (0 == msg[1].compare("normalize")){
-			//resetPath();
+			resetPath();
 			break;
 		}
-
-		cvWaitKey(1);
 	}
 }
 
@@ -199,7 +230,10 @@ void LocsCalc::resetPath() {
 }
 
 void LocsCalc::showImages(){
-	imshow("Webcam Orignal", camImage);
+	imshow("Webcam Original", camImage);
+	imshow("Background", background);
+	imshow("Obstacles", obstacles);
+	imshow("fullBackground", fullBackground);
 //	imshow("HSV",whsv);
 //	imshow("HSV2",phsv);
 //	imshow("HSV3",ahsv);

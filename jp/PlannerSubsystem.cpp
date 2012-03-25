@@ -50,6 +50,20 @@ void PlannerSubsystem::Execute(string behavior, string argument)
 		SendMessage("camera",cameraMsg);
 		
 	}
+	else if ( behavior.compare("grabBackground") == 0 )
+	{
+		vector<string> cameraMsg;
+		cameraMsg.push_back("camera");
+		cameraMsg.push_back("getBackground");
+		SendMessage("camera",cameraMsg);
+	}
+	else if ( behavior.compare("grabObstacles") == 0 )
+	{
+		vector<string> cameraMsg;
+		cameraMsg.push_back("camera");
+		cameraMsg.push_back("getObstacles");
+		SendMessage("camera",cameraMsg);
+	}
 	else if ( behavior.compare("performSquare") == 0 )
 	{
 		// Here we are going to get Pleo to perform a square maneuver, getting him to 

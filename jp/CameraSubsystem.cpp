@@ -84,6 +84,14 @@ void CameraSubsystem::Execute(string behavior, string argument)
 			//cbd.resetPath(argument);
 		}
 	}
+	else if ( behavior.compare("getBackground") == 0 )
+	{
+		lc.grabBackground();
+	}
+	else if ( behavior.compare("getObstacles") == 0 )
+	{
+		lc.grabObstacles();
+	}
 	else if ( behavior.compare("quit") == 0 )
 	{
 		m_logFile->out("shutting down camera");
