@@ -12,7 +12,7 @@ LocsCalc::LocsCalc() : webCam(0) {
 	params.maxThreshold = 255;
 	params.thresholdStep = 5;*/
 	//params.minDistBetweenBlobs = 10000;
-	params.minArea = 400;
+	params.minArea = 20;
 	//params.minConvexity = .4f;
 	//params.minInertiaRatio = .1f;
 	params.maxArea = 5000;
@@ -73,10 +73,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 		if (project >= 3) {
 			// find image sans background + obstacles
-			absdiff(fullBackground, camImage, pleoApplePos);
-			//cvtColor (pleoApplePos, test, CV_RGB2HSV);
-			imshow("test", test);
-			cvWaitKey(1);
+			absdiff(fullBackground, camImage, noBack);
 		}
 		
 		// convert raw image to hsv
@@ -87,20 +84,23 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		blur(hsvImage, phsv, Size(PINKB,PINKB));
 		blur(hsvImage, ahsv, Size(APPLEB,APPLEB));
 		
-		// split image to H,S and V images
-		split(whsv,wslices);
-		split(phsv,pslices);
-		split(ahsv,aslices);
+		// split image into H, S, and V images
+		split(whsv,slices);
+		slices[0].copyTo(whue); // get the hue channel
+		slices[1].copyTo(wsat); // get the sat channel
+		slices[2].copyTo(wval); // get the val channel
 		
-		wslices[0].copyTo(whue); // get the hue channel
-		wslices[1].copyTo(wsat); // get the sat channel
-		wslices[2].copyTo(wval); // get the V channel
-		pslices[0].copyTo(phue); // get the hue channel
-		pslices[1].copyTo(psat); // get the sat channel
-		pslices[2].copyTo(pval); // get the V channel
-		aslices[0].copyTo(ahue); // get the hue channel
-		aslices[1].copyTo(asat); // get the sat channel
-		aslices[2].copyTo(aval); // get the V channel
+		// split image into H, S, and V images
+		split(phsv,slices);
+		slices[0].copyTo(phue); // get the hue channel
+		slices[1].copyTo(psat); // get the sat channel
+		slices[2].copyTo(pval); // get the val channel
+		
+		// split image into H, S, and V images
+		split(ahsv,slices);
+		slices[0].copyTo(ahue); // get the hue channel
+		slices[1].copyTo(asat); // get the sat channel
+		slices[2].copyTo(aval); // get the val channel
 		
 		//apply threshold HUE upper/lower for color range
 		threshold (whue,lb,WHITEHL,255, CV_THRESH_BINARY); // get lower bound
@@ -141,10 +141,22 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		ahsv = ahue & asat & aval;
 
 		if (project >= 3) {
+			// split image into R, G, and B images
+			split(noBack,slices);
+			
+			/* combine slices such that the new image is as
+			   bright or brighter than the brightest channel */
+			slices[0].copyTo(noBack);
+			noBack |= slices[1];
+			noBack |= slices[2];
+			
+			// apply threshold
+			threshold (noBack,noBack,31,255, CV_THRESH_BINARY);
+			
 			// combine hsv images with subtracted background
-			whsv = whsv & pleoApplePos;
-			phsv = phsv & pleoApplePos;
-			ahsv = ahsv & pleoApplePos;
+			whsv &= noBack;
+			phsv &= noBack;
+			ahsv &= noBack;
 		}
 
 		// find white-colored blobs
@@ -239,11 +251,12 @@ void LocsCalc::resetPath() {
 }
 
 void LocsCalc::showImages(){
-//	imshow("Webcam Original", camImage);
+	imshow("Webcam Original", camImage);
 	imshow("Background", background);
 	imshow("Obstacles", obstacles);
 	imshow("fullBackground", fullBackground);
-//	imshow("HSV",whsv);
-//	imshow("HSV2",phsv);
-//	imshow("HSV3",ahsv);
+	imshow("noBack",noBack);
+	imshow("HSV",whsv);
+	imshow("HSV2",phsv);
+	imshow("HSV3",ahsv);
 }

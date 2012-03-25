@@ -84,11 +84,11 @@ void CameraSubsystem::Execute(string behavior, string argument)
 			//cbd.resetPath(argument);
 		}
 	}
-	else if ( behavior.compare("getBackground") == 0 )
+	else if ( behavior.compare("grabBackground") == 0 )
 	{
 		lc.grabBackground();
 	}
-	else if ( behavior.compare("getObstacles") == 0 )
+	else if ( behavior.compare("grabObstacles") == 0 )
 	{
 		lc.grabObstacles();
 	}

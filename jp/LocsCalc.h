@@ -62,10 +62,8 @@ private:
 	SimpleBlobDetector::Params params;
 	SimpleBlobDetector blobDetector;
 
-	// slices matrcies that hold H,S and V
-	vector<Mat> wslices;
-	vector<Mat> pslices;
-	vector<Mat> aslices;
+	// matrix that holds seperate color channels
+	vector<Mat> slices;
 
 	// raw image from webcam
 	Mat camImage;
@@ -74,7 +72,7 @@ private:
 	Mat background;		// background image
 	Mat obstacles;		// obstacles
 	Mat fullBackground;	// background and obstacles
-	Mat pleoApplePos;	// image - background and obstacles
+	Mat noBack;			// image - background and obstacles
 	Mat obstacleGrid;	// image - background and obstacles
 	
 	// matrices for blob detection
