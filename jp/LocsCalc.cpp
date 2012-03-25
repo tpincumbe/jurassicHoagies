@@ -8,20 +8,20 @@ LocsCalc::LocsCalc() : webCam(0) {
 	webCam.set(CV_CAP_PROP_FRAME_HEIGHT,480);
 	
 	// Initialize Blob Detector
-	params.minThreshold = 0;
+	/*params.minThreshold = 0;
 	params.maxThreshold = 255;
-	params.thresholdStep = 5;
+	params.thresholdStep = 5;*/
 	//params.minDistBetweenBlobs = 10000;
-	//params.minArea = 50;
+	params.minArea = 400;
 	//params.minConvexity = .4f;
 	//params.minInertiaRatio = .1f;
-	//params.maxArea = 500;
+	params.maxArea = 5000;
 	//params.maxConvexity = 2;
 	params.filterByColor = false;
 	params.filterByCircularity = false;
 	params.filterByInertia = false;
 	params.filterByConvexity = false;
-	params.filterByArea = false;
+	params.filterByArea = true;
 	blobDetector = SimpleBlobDetector(params);
 	blobDetector.create("SimpleBlob");
 }
@@ -31,14 +31,16 @@ LocsCalc::~LocsCalc() {
 }
 
 void LocsCalc::grabBackground() {
-	webCam >> camImage;
+	for (int i = 0; i < 10; i++){
+		webCam >> camImage;
+	}
 	camImage.copyTo(background);
-
-	printf("");
 }
 
 void LocsCalc::grabObstacles() {
-	webCam >> camImage;
+	for (int i = 0; i < 10; i++){
+		webCam >> camImage;
+	}
 	absdiff(background, camImage, obstacles);
 	camImage.copyTo(fullBackground);
 
@@ -63,6 +65,7 @@ void LocsCalc::grabObstacles() {
 
 void LocsCalc::detect(int project, SystemQueue *msq) {
 	vector<string> msg;
+	Mat test;
 
 	while(1){
 		// get new image from webcam
@@ -71,6 +74,9 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		if (project >= 3) {
 			// find image sans background + obstacles
 			absdiff(fullBackground, camImage, pleoApplePos);
+			//cvtColor (pleoApplePos, test, CV_RGB2HSV);
+			imshow("test", test);
+			cvWaitKey(1);
 		}
 		
 		// convert raw image to hsv
@@ -136,15 +142,16 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 		if (project >= 3) {
 			// combine hsv images with subtracted background
-			whsv &= pleoApplePos;
-			phsv &= pleoApplePos;
-			ahsv &= pleoApplePos;
+			whsv = whsv & pleoApplePos;
+			phsv = phsv & pleoApplePos;
+			ahsv = ahsv & pleoApplePos;
 		}
 
 		// find white-colored blobs
 		blobDetector.detect(whsv, keyPoints);
 		float size = 0;
 		
+		cout << "white key points size: " << keyPoints.size() << endl;
 		// locate largest blob
 		for(int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
@@ -162,7 +169,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		// find pink-colored blobs
 		blobDetector.detect(phsv, keyPoints);
 		size = 0;
-		
+		cout << "pink key points size: " << keyPoints.size() << endl;
 		for(int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
 				xpleofront = keyPoints[i].pt.x;
@@ -179,7 +186,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		// find apple-colored blobs
 		blobDetector.detect(ahsv, keyPoints);
 		size = 0;
-		
+		cout << "apple key points size: " << keyPoints.size() << endl;
 		for(int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
 				xfruit = keyPoints[i].pt.x;
@@ -202,17 +209,19 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		float pleo[3] = {(xpleofront + xpleorear) / 2, (ypleofront + ypleorear) / 2, orient};
 		float fruit[2] = {xfruit, yfruit};
 		
-		msg = rp.performAction(pleo, fruit);
+		//msg = rp.performAction(pleo, fruit);
 
-		if (project <= 2) {
-			// pass relevant information to route planner
-			msq->PushMessage("pleo", msg);
-		}
+		//if (project <= 2) {
+		//	// pass relevant information to route planner
+		//	msq->PushMessage("pleo", msg);
+		//}
 
-		if (0 == msg[1].compare("normalize")){
+		/*if (0 == msg[1].compare("normalize")){
 			resetPath();
 			break;
-		}
+		}*/
+
+		cvWaitKey(1);
 	}
 }
 
@@ -230,7 +239,7 @@ void LocsCalc::resetPath() {
 }
 
 void LocsCalc::showImages(){
-	imshow("Webcam Original", camImage);
+//	imshow("Webcam Original", camImage);
 	imshow("Background", background);
 	imshow("Obstacles", obstacles);
 	imshow("fullBackground", fullBackground);

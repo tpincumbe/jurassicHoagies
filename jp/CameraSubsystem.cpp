@@ -78,7 +78,7 @@ void CameraSubsystem::Execute(string behavior, string argument)
 			lc.resetPath();
 			vector<string> actMsg;
 
-			lc.detect(2, m_sysQueue);	
+			lc.detect(3, m_sysQueue);	
 		}else
 		{
 			//cbd.resetPath(argument);
