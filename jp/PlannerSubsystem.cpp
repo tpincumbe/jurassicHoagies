@@ -41,8 +41,7 @@ void PlannerSubsystem::Execute(string behavior, string argument)
 
 	if ( behavior.compare("findFruit") == 0 )
 	{
-		// Let the camera subsystem know that we are about to perform a square maneuver, so it
-		// needs to draw an expected path and then start tracking.
+		//Initialize camera for the behavior
 		vector<string> cameraMsg;
 		cameraMsg.push_back("camera");
 		cameraMsg.push_back("startTracking");
