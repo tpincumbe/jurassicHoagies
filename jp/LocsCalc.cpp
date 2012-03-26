@@ -54,13 +54,17 @@ void LocsCalc::grabObstacles() {
 			r = obstacles.data[i * obstacles.size().width + j * 3];
 			g = obstacles.data[i * obstacles.size().width + j * 3 + 1];
 			b = obstacles.data[i * obstacles.size().width + j * 3 + 2];
-			if ((r | g | b) > 20) {
+			if ((r | g | b) > 31) {
 				obstacleGrid.data[i * j] = 1;
 			} else {
 				obstacleGrid.data[i * j] = 0;
 			}
 		}
 	}
+}
+
+Mat LocsCalc::getMap() {
+	return obstacleGrid;
 }
 
 void LocsCalc::detect(int project, SystemQueue *msq) {
@@ -74,6 +78,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		if (project >= 3) {
 			// find image sans background + obstacles
 			absdiff(fullBackground, camImage, noBack);
+			blur(noBack, noBack, Size(4,4));
 		}
 		
 		// convert raw image to hsv
@@ -154,6 +159,9 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 			threshold (noBack,noBack,31,255, CV_THRESH_BINARY);
 			
 			// combine hsv images with subtracted background
+			imshow("white",whsv);
+			imshow("pink",phsv);
+			imshow("apple",ahsv);
 			whsv &= noBack;
 			phsv &= noBack;
 			ahsv &= noBack;
@@ -163,7 +171,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		blobDetector.detect(whsv, keyPoints);
 		float size = 0;
 		
-		cout << "white key points size: " << keyPoints.size() << endl;
+		 cout << "white key points size: " << keyPoints.size() << endl;
 		// locate largest blob
 		for(unsigned int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
@@ -181,7 +189,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		// find pink-colored blobs
 		blobDetector.detect(phsv, keyPoints);
 		size = 0;
-		cout << "pink key points size: " << keyPoints.size() << endl;
+		 cout << "pink key points size: " << keyPoints.size() << endl;
 		for(unsigned int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
 				xpleofront = keyPoints[i].pt.x;
@@ -198,7 +206,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		// find apple-colored blobs
 		blobDetector.detect(ahsv, keyPoints);
 		size = 0;
-		cout << "apple key points size: " << keyPoints.size() << endl;
+		 cout << "apple key points size: " << keyPoints.size() << endl;
 		for(unsigned int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
 				xfruit = keyPoints[i].pt.x;
@@ -221,19 +229,17 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		float pleo[3] = {(xpleofront + xpleorear) / 2, (ypleofront + ypleorear) / 2, orient};
 		float fruit[2] = {xfruit, yfruit};
 		
-		//msg = rp.performAction(pleo, fruit);
+		msg = rp.performAction(pleo, fruit);
 
-		//if (project <= 2) {
-		//	// pass relevant information to route planner
-		//	msq->PushMessage("pleo", msg);
-		//}
+		if (project <= 2) {
+			// pass relevant information to route planner
+			msq->PushMessage("pleo", msg);
+		}
 
 		/*if (0 == msg[1].compare("normalize")){
 			resetPath();
 			break;
 		}*/
-
-		cvWaitKey(1);
 	}
 }
 
@@ -250,7 +256,7 @@ void LocsCalc::resetPath() {
 	cvDestroyAllWindows();
 }
 
-void LocsCalc::showImages(){
+void LocsCalc::showImages() {
 	imshow("Webcam Original", camImage);
 	imshow("Background", background);
 	imshow("Obstacles", obstacles);
@@ -259,4 +265,6 @@ void LocsCalc::showImages(){
 	imshow("HSV",whsv);
 	imshow("HSV2",phsv);
 	imshow("HSV3",ahsv);
+	
+	cvWaitKey(1);
 }

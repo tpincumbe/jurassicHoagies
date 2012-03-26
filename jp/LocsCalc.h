@@ -43,6 +43,7 @@ public:
 	
 	void grabBackground();
 	void grabObstacles();
+	Mat getMap();
 	void detect(int project, SystemQueue *msq);
 	LocsCalc();
 	~LocsCalc();

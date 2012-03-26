@@ -114,7 +114,7 @@ int CameraSubsystem::HttpFetch( const char *url, const char *filename )
         
         FILE * fptr;
         if( do_file ) {
-            fptr = fopen( filename, "wb" );
+            fopen_s( &fptr,filename, "wb" );
         }
 
 	curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.5) Gecko/20041107 Firefox/1.0");

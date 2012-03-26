@@ -53,10 +53,8 @@ int RoutePlanner::getAction(float* pleo_pos, float* target_pos)
 	float pleo_x, pleo_y, pleo_ori, target_x, target_y;
 	float destination_vector[2];
 	float destination_unit[2];
-	float angle_diff;
 	float destination_mag;
 	float pleo_unit_x, pleo_unit_y;
-	float target_angle;
 
 	/*Populate variables before they disappear*/
 	pleo_x = pleo_pos[0];
