@@ -159,9 +159,9 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 			threshold (noBack,noBack,31,255, CV_THRESH_BINARY);
 			
 			// combine hsv images with subtracted background
-			imshow("white",whsv);
+			/*imshow("white",whsv);
 			imshow("pink",phsv);
-			imshow("apple",ahsv);
+			imshow("apple",ahsv);*/
 			whsv &= noBack;
 			phsv &= noBack;
 			ahsv &= noBack;
@@ -171,7 +171,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		blobDetector.detect(whsv, keyPoints);
 		float size = 0;
 		
-		 cout << "white key points size: " << keyPoints.size() << endl;
+		//cout << "white key points size: " << keyPoints.size() << endl;
 		// locate largest blob
 		for(unsigned int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
@@ -189,7 +189,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		// find pink-colored blobs
 		blobDetector.detect(phsv, keyPoints);
 		size = 0;
-		 cout << "pink key points size: " << keyPoints.size() << endl;
+		//cout << "pink key points size: " << keyPoints.size() << endl;
 		for(unsigned int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
 				xpleofront = keyPoints[i].pt.x;
@@ -206,7 +206,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		// find apple-colored blobs
 		blobDetector.detect(ahsv, keyPoints);
 		size = 0;
-		 cout << "apple key points size: " << keyPoints.size() << endl;
+		//cout << "apple key points size: " << keyPoints.size() << endl;
 		for(unsigned int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
 				xfruit = keyPoints[i].pt.x;
@@ -258,13 +258,13 @@ void LocsCalc::resetPath() {
 
 void LocsCalc::showImages() {
 	imshow("Webcam Original", camImage);
-	imshow("Background", background);
-	imshow("Obstacles", obstacles);
-	imshow("fullBackground", fullBackground);
-	imshow("noBack",noBack);
-	imshow("HSV",whsv);
-	imshow("HSV2",phsv);
-	imshow("HSV3",ahsv);
+//	imshow("Background", background);
+//	imshow("Obstacles", obstacles);
+//	imshow("fullBackground", fullBackground);
+//	imshow("noBack",noBack);
+//	imshow("HSV",whsv);
+//	imshow("HSV2",phsv);
+//	imshow("HSV3",ahsv);
 	
 	cvWaitKey(1);
 }
