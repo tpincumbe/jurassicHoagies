@@ -159,12 +159,12 @@ void ColorBlobDetector::trace(){
 		
 
 		//Draws circle around the blob that has been detected
-		for(int i=0; i<keyPoints.size(); i++){
+		for(unsigned int i=0; i<keyPoints.size(); i++){
 			circle(final, keyPoints[i].pt, 20, cvScalar(255,0,0), 10);
 		}
 
 		//Draw points from path
-		for(int i = 0; i < path.size(); i++){
+		for(unsigned int i = 0; i < path.size(); i++){
 			circle(final, path[i].pt, 1, cvScalar(0,255,0), 5);
 		}
 		//Alternatively, there exists a simple function:

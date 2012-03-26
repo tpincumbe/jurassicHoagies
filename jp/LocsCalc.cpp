@@ -54,7 +54,7 @@ void LocsCalc::grabObstacles() {
 			r = obstacles.data[i * obstacles.size().width + j * 3];
 			g = obstacles.data[i * obstacles.size().width + j * 3 + 1];
 			b = obstacles.data[i * obstacles.size().width + j * 3 + 2];
-			if (r | g | b > 20) {
+			if ((r | g | b) > 20) {
 				obstacleGrid.data[i * j] = 1;
 			} else {
 				obstacleGrid.data[i * j] = 0;
@@ -165,7 +165,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		
 		cout << "white key points size: " << keyPoints.size() << endl;
 		// locate largest blob
-		for(int i=0; i<keyPoints.size(); i++) {
+		for(unsigned int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
 				xpleorear = keyPoints[i].pt.x;
 				ypleorear = 480 - keyPoints[i].pt.y;
@@ -182,7 +182,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		blobDetector.detect(phsv, keyPoints);
 		size = 0;
 		cout << "pink key points size: " << keyPoints.size() << endl;
-		for(int i=0; i<keyPoints.size(); i++) {
+		for(unsigned int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
 				xpleofront = keyPoints[i].pt.x;
 				ypleofront = 480 - keyPoints[i].pt.y;
@@ -199,7 +199,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		blobDetector.detect(ahsv, keyPoints);
 		size = 0;
 		cout << "apple key points size: " << keyPoints.size() << endl;
-		for(int i=0; i<keyPoints.size(); i++) {
+		for(unsigned int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
 				xfruit = keyPoints[i].pt.x;
 				yfruit = 480 - keyPoints[i].pt.y;
@@ -240,10 +240,10 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 float LocsCalc::calcOrient(float xpf, float ypf, float xpr, float ypr) {
 	// if the front is above the back, return a value between 0 and 180
 	if (ypf > ypr)
-		return atan2(ypf-ypr,xpf-xpr) * 180 / M_PI;
+		return static_cast<float>(atan2(ypf-ypr,xpf-xpr) * 180 / M_PI);
 	// otherwise, return a value between 180 and 360
 	else
-		return atan2(ypf-ypr,xpf-xpr) * 180 / M_PI + 360;
+		return static_cast<float>(atan2(ypf-ypr,xpf-xpr) * 180 / M_PI + 360);
 }
 
 void LocsCalc::resetPath() {

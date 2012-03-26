@@ -67,8 +67,8 @@ int RoutePlanner::getAction(float* pleo_pos, float* target_pos)
 	target_y = target_pos[1];
 
 	/*Calculate the unit vector for the pleo's direction*/
-	pleo_unit_x = cos(pleo_ori*0.01745);
-	pleo_unit_y = sin(pleo_ori*0.01745);
+	pleo_unit_x = static_cast<float>(cos(pleo_ori*0.01745));
+	pleo_unit_y = static_cast<float>(sin(pleo_ori*0.01745));
 	
 	cout << "pleo_ori: " << pleo_ori << endl;
 	cout << "pleo_x: " << pleo_unit_x << endl;
