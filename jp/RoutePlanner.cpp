@@ -13,9 +13,10 @@ returns a string
 using namespace Eigen;
 using namespace std;
 
-vector<string> RoutePlanner::performAction(float* pleo_position, float* fruit_position) {
+vector<string> RoutePlanner::performAction(float* pleo_position, float* fruit_position, float* thresh) {
 	vector<string> actMsg;
-	int action = getAction(pleo_position, fruit_position);
+	
+	int action = getAction(pleo_position, fruit_position, thresh);
 
 	actMsg.push_back("pleo");
 
@@ -48,13 +49,14 @@ vector<string> RoutePlanner::performAction(float* pleo_position, float* fruit_po
 	//SendMessage("pleo", actMsg);
 }
 
-int RoutePlanner::getAction(float* pleo_pos, float* target_pos)
+int RoutePlanner::getAction(float* pleo_pos, float* target_pos, float* thresh)
 {
 	float pleo_x, pleo_y, pleo_ori, target_x, target_y;
 	float destination_vector[2];
 	float destination_unit[2];
 	float destination_mag;
 	float pleo_unit_x, pleo_unit_y;
+	REACH_ERROR = *thresh;
 
 	/*Populate variables before they disappear*/
 	pleo_x = pleo_pos[0];

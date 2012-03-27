@@ -6,7 +6,6 @@
 
 #define ANGLE_ERROR 2.5f
 #define TURN_THRESHOLD 40.00f
-#define REACH_ERROR 15.0f
 
 #define STOP 0
 #define WALK_FORWARD 1
@@ -19,11 +18,12 @@
 class RoutePlanner : public Subsystem
 {
 public:
+	float REACH_ERROR;
 	void Tick(size_t tick);
 	void Execute(string behavior, string argument);
 	void Shutdown();
 	string MonitorMessage();
-	vector<string> performAction(float* p, float* t);
+	vector<string> performAction(float* p, float* t, float* thresh);
 private:
-	int getAction(float[], float[]);
+	int getAction(float[], float[], float* thresh);
 };

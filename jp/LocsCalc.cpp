@@ -71,7 +71,12 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 	vector<string> msg;
 	Mat test;
 
+	bool afterFirstRun = false;
+	vector<vector<int>> pixelPath;
+	int indexOnPath;
+
 	while(1){
+
 		// get new image from webcam
 		webCam >> camImage;
 
@@ -228,20 +233,43 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		
 		float pleo[3] = {(xpleofront + xpleorear) / 2, (ypleofront + ypleorear) / 2, orient};
 		float fruit[2] = {xfruit, yfruit};
-		
-		//msg = rp.performAction(pleo, fruit);
 
 		if (project <= 2) {
 			// pass relevant information to route planner
-			msq->PushMessage("pleo", msg);
+			float defaultThresh = 15;
+			msg = rp.performAction(pleo, fruit, &defaultThresh);
+			if (0 == msg[1].compare("normalize")){
+				resetPath();
+			break;
+		}
 		} else if (project >= 3) {
-			search.findPath(obstacleGrid);
+			if (!afterFirstRun) {
+				vector<int> pleoLoc; pleoLoc.push_back(pleo[0]); pleoLoc.push_back(pleo[1]);
+				vector<int> fruitLoc; fruitLoc.push_back(fruit[0]); fruitLoc.push_back(fruit[1]);
+				pixelPath = search.findPath(obstacleGrid, pleoLoc, fruitLoc);
+				indexOnPath = 0;
+			}
+			float checkPoint[] = {pixelPath[indexOnPath][0], pixelPath[indexOnPath][1]};
+			float thresh = 20;
+			if (indexOnPath = pixelPath.size()-1)	// checkPoint is the fruit
+				thresh = 15;
+			msg = rp.performAction(pleo, checkPoint, &thresh);
+			msq->PushMessage("pleo", msg);
+
+			if (0 == msg[1].compare("normalize")) {	// reached current checkpoint
+				if(indexOnPath++ >= pixelPath.size())	break;
+			}
+		} else {
+			msq->PushMessage("pleo", msg);
 		}
 
 		/*if (0 == msg[1].compare("normalize")){
 			resetPath();
 			break;
 		}*/
+
+		afterFirstRun = true;
+
 	}
 }
 
