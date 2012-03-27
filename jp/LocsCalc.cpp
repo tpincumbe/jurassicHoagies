@@ -63,7 +63,7 @@ void LocsCalc::grabObstacles() {
 	}
 }
 
-Mat LocsCalc::getMap() {
+vector<vector<int>> LocsCalc::getMap() {
 	return obstacleGrid;
 }
 

@@ -44,7 +44,7 @@ public:
 	
 	void grabBackground();
 	void grabObstacles();
-	Mat getMap();
+	vector<vector<int>> getMap();
 	void detect(int project, SystemQueue *msq);
 	LocsCalc();
 	~LocsCalc();
@@ -75,7 +75,7 @@ private:
 	Mat obstacles;		// obstacles
 	Mat fullBackground;	// background and obstacles
 	Mat noBack;			// image - background and obstacles
-	vector<vector<int>> obstacleGrid;	// image - background and obstacles
+	vector<vector<int>> obstacleGrid;	// indicates location of obstacles
 	
 	// matrices for blob detection
 	Mat hsvImage;		// hsv image
