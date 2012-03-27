@@ -214,6 +214,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Search.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SerialTerm.cpp"
 				>
 			</File>

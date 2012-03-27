@@ -8,6 +8,7 @@ using namespace std::tr1;
 
 int manhattanDistance(vector<int>, vector<int>);
 vector<GridLocation> reconstructPath(GridLocation*);
+int pixelRound(float);
 
 /*
 // GRID FUNCTION DECLARATIONS //
@@ -21,7 +22,7 @@ vector<GridLocation> reconstructPath(GridLocation*);
 //	float yFactor = numPy/100.0;
 //	for (int i=0; i<100; i++) {
 //		for (int j=0; j<100; j++) {
-//			map[i][j] = GridLocation(this,i,j,pixels[round(i*xFactor)][round(j*yFactor)]);
+//			map[i][j] = GridLocation(this,i,j,pixels[pixelRound(i*xFactor)][pixelRound(j*yFactor)]);
 //		}
 //	}
 //}
@@ -34,7 +35,7 @@ Grid::Grid(vector<vector<int>> pixels, Grid* g) {		// TODO: define numRows, numC
 	for (int i=0; i<numRows; i++) {
 		vector<GridLocation> newRow;
 		for (int j=0; j<numCols; j++) {
-			newRow.push_back(GridLocation(g, i, j, pixels[round(i*xFactor)][round(j*yFactor)]));
+			newRow.push_back(GridLocation(g, i, j, pixels[pixelRound(i*xFactor)][pixelRound(j*yFactor)]));
 		}
 		map.push_back(newRow);
 	}
@@ -282,7 +283,7 @@ vector<GridLocation> reconstructPath(GridLocation *current) {	// TODO: modify to
 int manhattanDistance(vector<int> a, vector<int> b) {
 	return (abs(b[0]-a[0]) + abs(b[1]-a[1]));
 }
-int Search::round(float in) {
+int pixelRound(float in) {
 	if (in >= 0)
 		return floor(in + 0.5);
 	else

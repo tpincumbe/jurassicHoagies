@@ -11,7 +11,6 @@ class Search {
 
 public:
 	Search();
-	int round(float);
 	vector<int> gridLocToActual(vector<int> gridLoc);
 	vector<int> actualLocToGrid(vector<int> actualLoc);
 	void findPath();
