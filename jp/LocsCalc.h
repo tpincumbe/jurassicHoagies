@@ -5,6 +5,7 @@ using namespace std;
 #include "highgui.h"
 #include "cxcore.h"
 #include "RoutePlanner.h"
+#include <vector>
 using namespace cv;
 
 #define WHITEHL 0
@@ -74,7 +75,7 @@ private:
 	Mat obstacles;		// obstacles
 	Mat fullBackground;	// background and obstacles
 	Mat noBack;			// image - background and obstacles
-	Mat obstacleGrid;	// image - background and obstacles
+	vector<vector<int>> obstacleGrid;	// image - background and obstacles
 	
 	// matrices for blob detection
 	Mat hsvImage;		// hsv image

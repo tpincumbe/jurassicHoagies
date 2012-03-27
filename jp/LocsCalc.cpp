@@ -44,22 +44,22 @@ void LocsCalc::grabObstacles() {
 	absdiff(background, camImage, obstacles);
 	camImage.copyTo(fullBackground);
 
-	obstacleGrid = Mat(obstacles.size().height, obstacles.size().width, CV_8UC1);
-
 	int r;
 	int g;
 	int b;
 	for (int i = 0; i < obstacles.size().height; i ++) {
+		vector<int> newRow;
 		for (int j = 0; j < obstacles.size().width; j ++ ) {
 			r = obstacles.data[i * obstacles.size().width + j * 3];
 			g = obstacles.data[i * obstacles.size().width + j * 3 + 1];
 			b = obstacles.data[i * obstacles.size().width + j * 3 + 2];
 			if ((r | g | b) > 31) {
-				obstacleGrid.data[i * j] = 1;
+				newRow.push_back(1);
 			} else {
-				obstacleGrid.data[i * j] = 0;
+				newRow.push_back(0);
 			}
 		}
+		obstacleGrid.push_back(newRow);		// obstacleGrid will be sent as input to Grid() in Search.cpp
 	}
 }
 
