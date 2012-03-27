@@ -10,6 +10,8 @@ int manhattanDistance(vector<int>, vector<int>);
 vector<GridLocation> reconstructPath(GridLocation*);
 int pixelRound(float);
 
+float pixelsPerGrid = 5.0;
+
 /*
 // GRID FUNCTION DECLARATIONS //
 */
@@ -289,79 +291,31 @@ int pixelRound(float in) {
 	else
 		return static_cast<int>(floor(in - 0.5));
 }
-vector<int> Search::gridLocToActual(vector<int> gridLoc) {
-	vector<int> out;
-	out.push_back(static_cast<int>(gridLoc[0] * conversionFactor));
-	out.push_back(static_cast<int>(gridLoc[1] * conversionFactor));
-	return out;
-}
-vector<int> Search::actualLocToGrid(vector<int> actualLoc) {
-	vector<int> out;
-	out.push_back(static_cast<int>(actualLoc[0] / conversionFactor));
-	out.push_back(static_cast<int>(actualLoc[1] / conversionFactor));
-	return out;
+vector<vector<int>> gridPathtoPixels(vector<GridLocation> gridPath) {
+	vector<vector<int>> out;
+	for (int i=0; i<gridPath.size(); i++) {
+		vector<int> next;
+		vector<int> current = gridPath[i].getLocation();
+		next.push_back(current[0]*pixelsPerGrid);
+		next.push_back(current[1]*pixelsPerGrid);
+		out.push_back(next);
+	}
 }
 
 
 /*
- *	TEST METHOD
+ *	Compute and return pixel path from grid
  */
-void Search::findPath(vector<vector<int>> vec){
+vector<vector<int>> Search::findPath(vector<vector<int>> pixelArray, vector<int> start, vector<int> end){
 
-	/*vector<vector<int>> vec;// (10, vector<int>(10));
+	Grid g = Grid(pixelArray, &g);
+	g.enlargeObstacles(5);
 
-	for (int i = 0; i < 10; i++) {
-		vector<int> row; // Create an empty row
-		for (int j = 0; j < 10; j++) {
-			row.push_back(0); // Add an element (column) to the row
-		}
-		vec.push_back(row); // Add the row to the main vector
-	}
+	cout << "Searching from (" << start[0] << ", " << start[1] << ")"
+		 << "to (" << end[0] << ", " << end[1] << ")";
 
-	// add obstacles
-	vec[4][3] = 1;	vec[4][4] = 1;	vec[5][4] = 1;
-	vec[1][8] = 1;
-	vec[6][9] = 1;	vec[7][9] = 1;*/
+	vector<GridLocation> optimalPath = g.search(start, end);
+	vector<vector<int>> pixelLocPath = gridPathtoPixels(optimalPath);
 
-	cout << "making new grid...\n";
-	Grid testGrid = Grid(vec, &testGrid);
-
-	vector<vector<GridLocation>>* theMap = testGrid.getMap();
-
-	cout << "MAP:" << endl;
-	for (unsigned int i=0; i<theMap->size(); i++) {
-		for (unsigned int j=0; j<theMap[0].size(); j++) {
-			cout << (&(&theMap->at(i))->at(j))->getValue() << " ";
-		}
-		cout << endl;
-	}
-	
-	testGrid.enlargeObstacles(1);
-
-	cout << "MAP (enlarged obstacles):" << endl;
-	for (unsigned int i=0; i<theMap->size(); i++) {
-		for (unsigned int j=0; j<theMap[0].size(); j++) {
-			cout << (&(&theMap->at(i))->at(j))->getValue() << " ";
-		}
-		cout << endl;
-	}
-
-	vector<int> theStart;
-	theStart.push_back(8); theStart.push_back(1);
-	vector<int> theGoal;
-	theGoal.push_back(1); theGoal.push_back(6);
-
-	cout << "Searching from (" << theStart[0] << ", " << theStart[1] << ")"
-		 << "to (" << theGoal[0] << ", " << theGoal[1] << ")";
-
-	vector<GridLocation> optimalPath = testGrid.search(theStart, theGoal);
-
-	cout << "Computing optimal path, using A*" << endl;
-	for (unsigned int i=0; i<optimalPath.size(); i++) {
-		vector<int> currentLoc = optimalPath[i].getLocation();
-		cout << "(" << currentLoc[0] << ", " << currentLoc[1] << ") ";
-	}
-	cout << endl;
-
-	while (1) {}
+	return pixelLocPath;
 }
