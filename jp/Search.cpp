@@ -1,66 +1,13 @@
-#include <math.h>
-#include <iostream>
+#include "Search.h"
 #include <vector>
-//#include <queue>
 #include <unordered_set>
 
 using namespace std;
+using namespace std::tr1;
 
-class Grid;	class GridLocation;
-int round(float);
+
 int manhattanDistance(vector<int>, vector<int>);
 vector<GridLocation> reconstructPath(GridLocation*);
-
-float conversionFactor = 5.0;	// TODO: conversion factor of px to grid spaces
-
-  ////////////////////////////
- /* GRID class declaration */
-////////////////////////////
-class Grid {
-	vector<vector<GridLocation>> map;
-	vector<int> start, goal;
-
-public:
-	int numRows, numCols;
-	Grid(vector<vector<GridLocation>>);
-	Grid(int**,int,int);
-	Grid(vector<vector<int>>, Grid*);
-	void enlargeObstacles(int);
-	void setLocation(int,int,int);
-	vector<vector<GridLocation>>* getMap();
-	vector<GridLocation> search(vector<int>,vector<int>);
-	vector<int> getGoalLocation();
-	GridLocation* lowestScore(unordered_set<GridLocation*> theSet);
-};
-
-  ////////////////////////////////////
- /* GRIDLOCATION class declaration */
-////////////////////////////////////
-class GridLocation {
-	int row, col, value, pathCost;
-	Grid* grid;
-	GridLocation* cameFrom;
-
-public:
-	GridLocation(Grid*,int,int,int);
-	GridLocation();
-	bool isEdge();	// return true iff value=0 (not wall) & has neighboring walls
-	void setValue(int);
-	int getValue();
-	vector<GridLocation*> getValidMoves(int);
-	vector<GridLocation*> getNeighbors();
-	int getScore();
-	void setPathCost(int);
-	int getPathCost();
-	int heuristic();
-	vector<int> getLocation();
-
-	void setCameFrom(GridLocation*);
-	GridLocation* getCameFrom();
-
-	Grid* getGrid();
-	void setGrid(Grid*);
-};
 
 /*
 // GRID FUNCTION DECLARATIONS //
@@ -316,6 +263,10 @@ Grid* GridLocation::getGrid() { return grid; }
 void GridLocation::setGrid(Grid* newGrid) {	grid = newGrid; }
 
 
+Search::Search(){
+	conversionFactor = 5.0;
+}
+
 /*
 // OTHER fuction declarations
 */
@@ -331,19 +282,19 @@ vector<GridLocation> reconstructPath(GridLocation *current) {	// TODO: modify to
 int manhattanDistance(vector<int> a, vector<int> b) {
 	return (abs(b[0]-a[0]) + abs(b[1]-a[1]));
 }
-int round(float in) {
+int Search::round(float in) {
 	if (in >= 0)
 		return floor(in + 0.5);
 	else
 		return floor(in - 0.5);
 }
-vector<int> gridLocToActual(vector<int> gridLoc) {
+vector<int> Search::gridLocToActual(vector<int> gridLoc) {
 	vector<int> out;
 	out.push_back(gridLoc[0] * conversionFactor);
 	out.push_back(gridLoc[1] * conversionFactor);
 	return out;
 }
-vector<int> actualLocToGrid(vector<int> actualLoc) {
+vector<int> Search::actualLocToGrid(vector<int> actualLoc) {
 	vector<int> out;
 	out.push_back(actualLoc[0] / conversionFactor);
 	out.push_back(actualLoc[1] / conversionFactor);
@@ -354,8 +305,7 @@ vector<int> actualLocToGrid(vector<int> actualLoc) {
 /*
  *	TEST METHOD
  */
-
-int main() {
+void Search::findPath(){
 
 	vector<vector<int>> vec;// (10, vector<int>(10));
 
@@ -413,6 +363,4 @@ int main() {
 	cout << endl;
 
 	while (1) {}
-
-	return 0;
 }

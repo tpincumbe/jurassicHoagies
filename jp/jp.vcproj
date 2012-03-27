@@ -240,6 +240,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Grid.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridLocation.h"
+				>
+			</File>
+			<File
 				RelativePath=".\LocsCalc.h"
 				>
 			</File>
@@ -265,6 +273,10 @@
 			</File>
 			<File
 				RelativePath=".\RoutePlanner.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Search.h"
 				>
 			</File>
 			<File
