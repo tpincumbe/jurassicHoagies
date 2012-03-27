@@ -286,6 +286,7 @@ vector<vector<int>> gridPathtoPixels(vector<GridLocation> gridPath) {
 		next.push_back(current[1]*pixelsPerGrid);
 		out.push_back(next);
 	}
+	return out;
 }
 
 

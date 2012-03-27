@@ -13,6 +13,7 @@
 //
 //--------------------------------------------------------------------
 #include "Subsystem.h"
+#include <iostream>
 
 extern "C"
 {
@@ -50,8 +51,13 @@ void Subsystem::ThreadProc()
 			m_logFile->out("got a message on the queue, now processing it!");
 			if ( msg.size() > 2 )
 				Execute(msg[1],msg[2]);
-			else
+			else if ( msg.size() > 1 )
 				Execute(msg[1],"");
+			else
+				std::cout << "wwwWWWWWWHHHHAAAAAAAAAAAAAA???" << endl;
+
+			if (msg.size() > 1)
+				std::cout << " *********** HERP MY FUCKING DERP BITCH ************** " << endl;
 		}
 
 		// Tick the subsystem

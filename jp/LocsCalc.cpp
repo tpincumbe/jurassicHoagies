@@ -248,6 +248,9 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 			break;
 		}
 		} else if (project >= 3 && foundPleoAndFruit) {
+
+			cout << "!!!" << endl;
+
 			if (!afterFirstRun) {
 				vector<int> pleoLoc; pleoLoc.push_back(pleo[0]); pleoLoc.push_back(pleo[1]);
 				vector<int> fruitLoc; fruitLoc.push_back(fruit[0]); fruitLoc.push_back(fruit[1]);
