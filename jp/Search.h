@@ -13,7 +13,7 @@ public:
 	Search();
 	vector<int> gridLocToActual(vector<int> gridLoc);
 	vector<int> actualLocToGrid(vector<int> actualLoc);
-	void findPath();
+	void findPath(vector<vector<int>> vec);
 private:
 	float conversionFactor;	// TODO: conversion factor of px to grid spaces
 };

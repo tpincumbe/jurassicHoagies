@@ -5,6 +5,7 @@ using namespace std;
 #include "highgui.h"
 #include "cxcore.h"
 #include "RoutePlanner.h"
+#include "Search.h"
 #include <vector>
 using namespace cv;
 
@@ -56,6 +57,7 @@ private:
 	void showImages();
 
 	RoutePlanner rp;
+	Search search;
 
 	// camera
 	VideoCapture webCam;

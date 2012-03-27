@@ -306,9 +306,9 @@ vector<int> Search::actualLocToGrid(vector<int> actualLoc) {
 /*
  *	TEST METHOD
  */
-void Search::findPath(){
+void Search::findPath(vector<vector<int>> vec){
 
-	vector<vector<int>> vec;// (10, vector<int>(10));
+	/*vector<vector<int>> vec;// (10, vector<int>(10));
 
 	for (int i = 0; i < 10; i++) {
 		vector<int> row; // Create an empty row
@@ -321,7 +321,7 @@ void Search::findPath(){
 	// add obstacles
 	vec[4][3] = 1;	vec[4][4] = 1;	vec[5][4] = 1;
 	vec[1][8] = 1;
-	vec[6][9] = 1;	vec[7][9] = 1;
+	vec[6][9] = 1;	vec[7][9] = 1;*/
 
 	cout << "making new grid...\n";
 	Grid testGrid = Grid(vec, &testGrid);

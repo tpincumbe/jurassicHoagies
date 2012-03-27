@@ -229,11 +229,13 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		float pleo[3] = {(xpleofront + xpleorear) / 2, (ypleofront + ypleorear) / 2, orient};
 		float fruit[2] = {xfruit, yfruit};
 		
-		msg = rp.performAction(pleo, fruit);
+		//msg = rp.performAction(pleo, fruit);
 
 		if (project <= 2) {
 			// pass relevant information to route planner
 			msq->PushMessage("pleo", msg);
+		} else if (project >= 3) {
+			search.findPath(obstacleGrid);
 		}
 
 		/*if (0 == msg[1].compare("normalize")){
