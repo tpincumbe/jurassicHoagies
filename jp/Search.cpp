@@ -17,8 +17,8 @@ float pixelsPerGrid = 4.318;
 Grid::Grid(vector<vector<int>> pixels, Grid* g) {		// TODO: define numRows, numCos, xFacor, yFactor according to specs
 	numRows = 640/pixelsPerGrid;	numCols = 480/pixelsPerGrid;
 
-	float xFactor = static_cast<float>(pixels.size()/pixelsPerGrid);
-	float yFactor = static_cast<float>(pixels[0].size()/pixelsPerGrid);
+	float xFactor = static_cast<float>(pixels.size()/numRows);
+	float yFactor = static_cast<float>(pixels[0].size()/numCols);
 
 	for (int i=0; i<numRows; i++) {
 		vector<GridLocation> newRow;
@@ -28,13 +28,13 @@ Grid::Grid(vector<vector<int>> pixels, Grid* g) {		// TODO: define numRows, numC
 		map.push_back(newRow);
 	}
 
-	vector<vector<GridLocation>>* theMap = g->getMap();
-	for (unsigned int i=0; i<theMap->size(); i++) {
-		for (unsigned int j=0; j<theMap[0].size(); j++) {
-			cout << (&(&theMap->at(i))->at(j))->getValue() << " ";
-		}
-		cout << endl;
-	}
+	//vector<vector<GridLocation>>* theMap = g->getMap();
+	//for (unsigned int i=0; i<theMap->size(); i++) {
+	//	for (unsigned int j=0; j<theMap[0].size(); j++) {
+	//		cout << (&(&theMap->at(i))->at(j))->getValue() << " ";
+	//	}
+	//	cout << endl;
+	//}
 }
 void Grid::enlargeObstacles(int gridSpaces) {
 

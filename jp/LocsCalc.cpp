@@ -71,7 +71,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 	vector<string> msg;
 	Mat test;
 
-	bool afterFirstRun = false;
+	bool afterFirstRun = false, foundPleoAndFruit = false;
 	vector<vector<int>> pixelPath;
 	int indexOnPath;
 
@@ -212,6 +212,11 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		blobDetector.detect(ahsv, keyPoints);
 		size = 0;
 		//cout << "apple key points size: " << keyPoints.size() << endl;
+
+		if (keyPoints.size() > 1) {
+			foundPleoAndFruit = true;
+		}
+
 		for(unsigned int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
 				xfruit = keyPoints[i].pt.x;
@@ -242,7 +247,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				resetPath();
 			break;
 		}
-		} else if (project >= 3) {
+		} else if (project >= 3 && foundPleoAndFruit) {
 			if (!afterFirstRun) {
 				vector<int> pleoLoc; pleoLoc.push_back(pleo[0]); pleoLoc.push_back(pleo[1]);
 				vector<int> fruitLoc; fruitLoc.push_back(fruit[0]); fruitLoc.push_back(fruit[1]);
@@ -254,6 +259,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 			if (indexOnPath = pixelPath.size()-1)	// checkPoint is the fruit
 				thresh = 15;
 			msg = rp.performAction(pleo, checkPoint, &thresh);
+
 			msq->PushMessage("pleo", msg);
 
 			if (0 == msg[1].compare("normalize")) {	// reached current checkpoint
