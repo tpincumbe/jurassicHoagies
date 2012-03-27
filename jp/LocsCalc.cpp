@@ -287,9 +287,13 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				cout << "indexOnPath = " << indexOnPath << endl;
 
 			float checkPoint[] = {pixelPath[indexOnPath][0], pixelPath[indexOnPath][1]};
-			float thresh = 20;
-			if (indexOnPath = pixelPath.size()-1)	// checkPoint is the fruit
+			float thresh = 35;	// TODO: good value // checkPoint along path
+			if (indexOnPath = pixelPath.size()-1) {	// checkPoint is the fruit
 				thresh = 15;
+			}
+
+			cout << "threshold is " << thresh << endl;
+
 			msg = rp.performAction(pleo, checkPoint, &thresh);
 
 			msq->PushMessage("pleo", msg);

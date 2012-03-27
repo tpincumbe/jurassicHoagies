@@ -309,6 +309,7 @@ vector<vector<int>> Search::findPath(vector<vector<int>> pixelArray, vector<int>
 	vector<vector<int>> pixelLocPath = gridPathtoPixels(optimalPath);
 	
 	// pixel path
+	cout << endl;
 	for (unsigned int i=0; i<pixelLocPath.size(); i++) {
 		cout << "(" << pixelLocPath[i][0] << ", " << pixelLocPath[i][1] << ") ";
 	}
