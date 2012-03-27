@@ -54,10 +54,14 @@ void Subsystem::ThreadProc()
 			else if ( msg.size() > 1 )
 				Execute(msg[1],"");
 			else
-				std::cout << "wwwWWWWWWHHHHAAAAAAAAAAAAAA???" << endl;
+				std::cout << "why?" << endl;
 
-			if (msg.size() > 1)
-				std::cout << " *********** HERP MY FUCKING DERP BITCH ************** " << endl;
+			if (msg.size() > 1) {
+				std::cout << "executing: " << msg[1];
+				if (msg.size() > 2)
+					std::cout << " " << msg[2];
+				std::cout << endl;
+			}
 		}
 
 		// Tick the subsystem

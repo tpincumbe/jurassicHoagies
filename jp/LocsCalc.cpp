@@ -68,14 +68,23 @@ vector<vector<int>> LocsCalc::getMap() {
 }
 
 void LocsCalc::detect(int project, SystemQueue *msq) {
+
 	vector<string> msg;
 	Mat test;
 
-	bool afterFirstRun = false, foundPleoAndFruit = false;
+	bool afterFirstRun = false;
+	bool foundPleoFront = false;
+	bool foundPleoBack = false;
+	bool foundFruit = false;
+
 	vector<vector<int>> pixelPath;
 	int indexOnPath;
 
 	while(1){
+
+		if (!foundPleoFront || !foundPleoBack || !foundFruit) {
+			cout << "looking for pleo and fruit..." << endl;
+		}
 
 		// get new image from webcam
 		webCam >> camImage;
@@ -176,6 +185,12 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		blobDetector.detect(whsv, keyPoints);
 		float size = 0;
 		
+		if (keyPoints.size() > 0) {
+			if (!foundPleoBack)
+				cout << " * found pleo back" << endl;
+			foundPleoBack = true;
+		}
+		
 		//cout << "white key points size: " << keyPoints.size() << endl;
 		// locate largest blob
 		for(unsigned int i=0; i<keyPoints.size(); i++) {
@@ -194,6 +209,13 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		// find pink-colored blobs
 		blobDetector.detect(phsv, keyPoints);
 		size = 0;
+		
+		if (keyPoints.size() > 0) {
+			if (!foundPleoFront)
+				cout << " * found pleo front" << endl;
+			foundPleoFront = true;
+		}
+
 		//cout << "pink key points size: " << keyPoints.size() << endl;
 		for(unsigned int i=0; i<keyPoints.size(); i++) {
 			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
@@ -213,8 +235,10 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		size = 0;
 		//cout << "apple key points size: " << keyPoints.size() << endl;
 
-		if (keyPoints.size() > 1) {
-			foundPleoAndFruit = true;
+		if (keyPoints.size() > 0) {
+			if (!foundFruit)
+				cout << " * found fruit" << endl;
+			foundFruit = true;
 		}
 
 		for(unsigned int i=0; i<keyPoints.size(); i++) {
@@ -247,16 +271,21 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				resetPath();
 			break;
 		}
-		} else if (project >= 3 && foundPleoAndFruit) {
-
-			cout << "!!!" << endl;
+		} else if (project >= 3 && foundPleoFront && foundPleoBack && foundFruit) {
 
 			if (!afterFirstRun) {
 				vector<int> pleoLoc; pleoLoc.push_back(pleo[0]); pleoLoc.push_back(pleo[1]);
 				vector<int> fruitLoc; fruitLoc.push_back(fruit[0]); fruitLoc.push_back(fruit[1]);
 				pixelPath = search.findPath(obstacleGrid, pleoLoc, fruitLoc);
 				indexOnPath = 0;
+
+				cout << "indexOnPath = " << indexOnPath << endl;
+
+				afterFirstRun = true;
 			}
+
+				cout << "indexOnPath = " << indexOnPath << endl;
+
 			float checkPoint[] = {pixelPath[indexOnPath][0], pixelPath[indexOnPath][1]};
 			float thresh = 20;
 			if (indexOnPath = pixelPath.size()-1)	// checkPoint is the fruit
@@ -266,7 +295,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 			msq->PushMessage("pleo", msg);
 
 			if (0 == msg[1].compare("normalize")) {	// reached current checkpoint
-				if(indexOnPath++ >= pixelPath.size())	break;
+				if (indexOnPath++ >= pixelPath.size())	break;
 			}
 		} else {
 			msq->PushMessage("pleo", msg);
@@ -276,8 +305,6 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 			resetPath();
 			break;
 		}*/
-
-		afterFirstRun = true;
 
 	}
 }

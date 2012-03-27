@@ -61,6 +61,10 @@ vector<vector<GridLocation>>* Grid::getMap() {
 }
 vector<GridLocation> Grid::search(vector<int> startLoc, vector<int> goalLoc) {	// implements A* search algorithm
 	start = startLoc;	goal = goalLoc;
+	start[0] = start[0]/pixelsPerGrid;
+	start[1] = start[1]/pixelsPerGrid;
+	goal[0] = goal[0]/pixelsPerGrid;
+	goal[1] = goal[1]/pixelsPerGrid;
 
 	unordered_set<GridLocation*> closed, open;
 	//priority_queue<GridLocation> open;
@@ -303,6 +307,12 @@ vector<vector<int>> Search::findPath(vector<vector<int>> pixelArray, vector<int>
 
 	vector<GridLocation> optimalPath = g.search(start, end);
 	vector<vector<int>> pixelLocPath = gridPathtoPixels(optimalPath);
+	
+	// pixel path
+	for (unsigned int i=0; i<pixelLocPath.size(); i++) {
+		cout << "(" << pixelLocPath[i][0] << ", " << pixelLocPath[i][1] << ") ";
+	}
+	cout << endl;
 
 	return pixelLocPath;
 }
