@@ -10,29 +10,15 @@ int manhattanDistance(vector<int>, vector<int>);
 vector<GridLocation> reconstructPath(GridLocation*);
 int pixelRound(float);
 
-float pixelsPerGrid = 5.0;
+float pixelsPerGrid = 4.318;
 
-/*
+
 // GRID FUNCTION DECLARATIONS //
-*/
-//Grid::Grid(vector<vector<GridLocation>> gl) {
-//	map = gl;
-//	numRows=gl.size(); numCols=gl[0].size();
-//}
-//Grid::Grid(int** pixels, int numPx, int numPy) {	// NOTE: 'pixels' parameter should be an array of 1's (obstacle) and 0's (open space)
-//	float xFactor = numPx/100.0;
-//	float yFactor = numPy/100.0;
-//	for (int i=0; i<100; i++) {
-//		for (int j=0; j<100; j++) {
-//			map[i][j] = GridLocation(this,i,j,pixels[pixelRound(i*xFactor)][pixelRound(j*yFactor)]);
-//		}
-//	}
-//}
 Grid::Grid(vector<vector<int>> pixels, Grid* g) {		// TODO: define numRows, numCos, xFacor, yFactor according to specs
-	numRows = 10;	numCols = 10;
+	numRows = 640/pixelsPerGrid;	numCols = 480/pixelsPerGrid;
 
-	float xFactor = static_cast<float>(pixels.size()/10.0);
-	float yFactor = static_cast<float>(pixels[0].size()/10.0);
+	float xFactor = static_cast<float>(pixels.size()/pixelsPerGrid);
+	float yFactor = static_cast<float>(pixels[0].size()/pixelsPerGrid);
 
 	for (int i=0; i<numRows; i++) {
 		vector<GridLocation> newRow;
