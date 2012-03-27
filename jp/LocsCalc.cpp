@@ -295,7 +295,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 			msq->PushMessage("pleo", msg);
 
 			if (0 == msg[1].compare("normalize")) {	// reached current checkpoint
-				if (indexOnPath++ >= pixelPath.size())	break;
+				if (++indexOnPath >= pixelPath.size())	break;
 			}
 		} else {
 			msq->PushMessage("pleo", msg);

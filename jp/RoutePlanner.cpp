@@ -84,12 +84,9 @@ int RoutePlanner::getAction(float* pleo_pos, float* target_pos, float* thresh)
 	/*If the pleo has already reached the target, stop the robot*/
 	if(destination_mag < REACH_ERROR)
     {
-		if (REACH_ERROR == 15) {
+		if (REACH_ERROR == 15)
 			printf("Reached Destination. Stopping Pleo\n");
-			return STOP;
-		} else {
-			return STOP;
-		}
+		return STOP;
 	}
 
 	destination_unit[0] = destination_vector[0]/destination_mag;
