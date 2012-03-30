@@ -14,24 +14,35 @@ float pixelsPerGrid = 4.318;
 
 
 // GRID FUNCTION DECLARATIONS //
-Grid::Grid(vector<vector<int>> pixels, Grid* g) {		// TODO: define numRows, numCos, xFacor, yFactor according to specs
+Grid::Grid(vector<vector<int>> pixels, Grid* g) {
 	numRows = 640/pixelsPerGrid;	numCols = 480/pixelsPerGrid;
 
-	float xFactor = static_cast<float>(pixels.size()/numRows);
-	float yFactor = static_cast<float>(pixels[0].size()/numCols);
+	cout << "Making grid of size " << numRows << " x " << numCols << endl;
+
+	int ps = pixels.size();
+
+	float xFactor = 640/numRows;
+	float yFactor = 480/numCols;
 
 	for (int i=0; i<numRows; i++) {
 		vector<GridLocation> newRow;
 		for (int j=0; j<numCols; j++) {
-			newRow.push_back(GridLocation(g, i, j, pixels[pixelRound(i*xFactor)][pixelRound(j*yFactor)]));
+			int px = pixelRound(j*xFactor);
+			int py = pixelRound(i*yFactor);
+
+			if (pixels[px][py] == 1) {
+				cout << "Found an obstacle in grid @ (" << i << ", " << j << ")" << endl;
+			}
+
+			newRow.push_back(GridLocation(g, i, j, pixels[px][py]));
 		}
 		map.push_back(newRow);
 	}
 
-	//vector<vector<GridLocation>>* theMap = g->getMap();
-	//for (unsigned int i=0; i<theMap->size(); i++) {
-	//	for (unsigned int j=0; j<theMap[0].size(); j++) {
-	//		cout << (&(&theMap->at(i))->at(j))->getValue() << " ";
+	//for (unsigned int ii=0; ii<numRows; ii++) {
+	//	for (unsigned int jj=0; jj<numCols; jj++) {
+	//		ii; jj;
+	//		cout << map.at(ii).at(jj).getValue() << " ";
 	//	}
 	//	cout << endl;
 	//}
@@ -63,13 +74,13 @@ vector<GridLocation> Grid::search(vector<int> startLoc, vector<int> goalLoc) {	/
 	start = startLoc;	goal = goalLoc;
 	start[0] = start[0]/pixelsPerGrid;
 	start[1] = start[1]/pixelsPerGrid;
-	goal[0] = goal[0]/pixelsPerGrid;
-	goal[1] = goal[1]/pixelsPerGrid;
+	goal[1] = goal[0]/pixelsPerGrid;
+	goal[0] = goal[1]/pixelsPerGrid;
 
 	unordered_set<GridLocation*> closed, open;
 	//priority_queue<GridLocation> open;
 
-	GridLocation* current = &map[start[0]][start[1]];
+	GridLocation* current = &map[start[1]][start[0]];
 	current->setPathCost(0);
 
 	open.insert(current);
@@ -299,13 +310,41 @@ vector<vector<int>> gridPathtoPixels(vector<GridLocation> gridPath) {
  */
 vector<vector<int>> Search::findPath(vector<vector<int>> pixelArray, vector<int> start, vector<int> end){
 
+	//vector<vector<int>> obstacleLocs;
+
+	//for (int i=0; i<pixelArray.size(); i++) {
+	//	for (int j=0; j<pixelArray.at(0).size(); j++) {
+	//		if (pixelArray[i][j] == 1) {
+	//			vector<int> curLoc;
+	//			curLoc.push_back(i); curLoc.push_back(j);
+	//			obstacleLocs.push_back(curLoc);
+	//		}
+	//	}
+	//}
+
 	Grid g = Grid(pixelArray, &g);
 	g.enlargeObstacles(5);
+
+	//cout << endl << endl << "MAP: from x=0 to x=30" << endl;
+	//vector<vector<GridLocation>>* theMap = g.getMap();
+	//for (int i=0; i<theMap->size(); i++) {
+	//	for (int j=0; j<30; j++) {
+	//		cout << theMap->at(i).at(j).getValue();
+	//	}
+	//	cout << endl;
+	//}
 
 	cout << "Searching from (" << start[0] << ", " << start[1] << ")"
 		 << "to (" << end[0] << ", " << end[1] << ")";
 
 	vector<GridLocation> optimalPath = g.search(start, end);
+
+	for (int i=0; i<optimalPath.size(); i++) {
+		if (g.getMap()->at(optimalPath[i].getLocation()[0]).at(optimalPath[i].getLocation()[1]).getValue() == 1) {
+			cout << "ERROR: path location (" << optimalPath[i].getLocation()[0] << ", " << optimalPath[i].getLocation()[0] << ") is inside obstacle" << endl;
+		}
+	}
+
 	vector<vector<int>> pixelLocPath = gridPathtoPixels(optimalPath);
 	
 	// pixel path
@@ -316,4 +355,5 @@ vector<vector<int>> Search::findPath(vector<vector<int>> pixelArray, vector<int>
 	cout << endl;
 
 	return pixelLocPath;
+	//return obstacleLocs;
 }

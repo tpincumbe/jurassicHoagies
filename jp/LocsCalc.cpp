@@ -1,6 +1,13 @@
 #include <iostream>
 #include <stdlib.h>
 #include "LocsCalc.h"
+#include "Search.h"
+
+
+
+float pixelsPerGrid2 = 4.318;
+
+
 
 LocsCalc::LocsCalc() : webCam(0) {
 	// Initialize Camera
@@ -47,9 +54,9 @@ void LocsCalc::grabObstacles() {
 	int r;
 	int g;
 	int b;
-	for (int i = 0; i < obstacles.size().height; i ++) {
+	for (int i = 0; i < obstacles.size().width; i ++) {
 		vector<int> newRow;
-		for (int j = 0; j < obstacles.size().width; j ++ ) {
+		for (int j = 0; j < obstacles.size().height; j ++ ) {
 			r = obstacles.data[i * obstacles.size().width + j * 3];
 			g = obstacles.data[i * obstacles.size().width + j * 3 + 1];
 			b = obstacles.data[i * obstacles.size().width + j * 3 + 2];
@@ -78,7 +85,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 	bool foundFruit = false;
 
 	vector<vector<int>> pixelPath;
-	int indexOnPath;
+	int indexOnPath = 0;
 
 	while(1){
 
@@ -253,9 +260,6 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		
 		// circle apple on camera
 		circle(camImage, Point2f(xfruit, 480 - yfruit), 20, cvScalar(0,0,255));
-
-		// display locations in video feed
-		showImages();
 		
 		// calculate the pleo's orientation
 		float orient = calcOrient(xpleofront, ypleofront, xpleorear, ypleorear);
@@ -269,8 +273,8 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 			msg = rp.performAction(pleo, fruit, &defaultThresh);
 			if (0 == msg[1].compare("normalize")){
 				resetPath();
-			break;
-		}
+				break;
+			}
 		} else if (project >= 3 && foundPleoFront && foundPleoBack && foundFruit) {
 
 			if (!afterFirstRun) {
@@ -283,16 +287,27 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 				afterFirstRun = true;
 			}
+			
+			for (int i=0; i<640; i+=pixelsPerGrid2) {
+				line(camImage, Point(i,0), Point(i,480), RGB(255,0,255), 1);
+			}
+			for (int j=0; j<480; j+=pixelsPerGrid2) {
+				line(camImage, Point(0,j), Point(640,j), RGB(255,0,255), 1);
+			}
+			for (int i=0; i<pixelPath.size(); i++) {
+				cv::Scalar theColor = Scalar(0,255,0);
+				if (i < indexOnPath)
+					theColor = Scalar(255,0,0);
+				circle(camImage,Point(pixelPath.at(i).at(0),pixelPath.at(i).at(1)),3,theColor);
+			}
 
-				cout << "indexOnPath = " << indexOnPath << endl;
+			//cout << "indexOnPath = " << indexOnPath << " checkPoint=(" << pixelPath[indexOnPath][0] << ", " << pixelPath[indexOnPath][1] << ")" << endl;
 
 			float checkPoint[] = {pixelPath[indexOnPath][0], pixelPath[indexOnPath][1]};
 			float thresh = 35;	// TODO: good value // checkPoint along path
-			if (indexOnPath = pixelPath.size()-1) {	// checkPoint is the fruit
+			if (indexOnPath == pixelPath.size()-1) {	// checkPoint is the fruit
 				thresh = 15;
 			}
-
-			cout << "threshold is " << thresh << endl;
 
 			msg = rp.performAction(pleo, checkPoint, &thresh);
 
@@ -304,6 +319,10 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		} else {
 			msq->PushMessage("pleo", msg);
 		}
+
+
+		// display locations in video feed
+		showImages();
 
 		/*if (0 == msg[1].compare("normalize")){
 			resetPath();
@@ -327,9 +346,42 @@ void LocsCalc::resetPath() {
 }
 
 void LocsCalc::showImages() {
+	
+	cv::Scalar green = cvScalar(0,255,0);
+	circle(camImage, Point(100, 10), 5, green, 1);
+
 	imshow("Webcam Original", camImage);
 //	imshow("Background", background);
-//	imshow("Obstacles", obstacles);
+
+	cv::Scalar red = cvScalar(255,0,0);
+
+	int r,g,b;
+	for (int i = 0; i < obstacles.size().width; i ++) {
+		vector<int> newRow;
+		for (int j = 0; j < obstacles.size().height; j ++) {
+			r = obstacles.data[i * obstacles.size().width + j * 3];
+			g = obstacles.data[i * obstacles.size().width + j * 3 + 1];
+			b = obstacles.data[i * obstacles.size().width + j * 3 + 2];
+			if (r+b+b == (255*3)) {
+
+			} else if ((r | g | b) > 31) {
+			//if (r+g+b > 100) {
+
+				obstacles.data[i*obstacles.size().width + j * 3] = 255;
+				obstacles.data[i*obstacles.size().width + j * 3 + 1] = 255;
+				obstacles.data[i*obstacles.size().width + j * 3 + 2] = 255;
+
+				//circle(obstacles, Point(j+1, i+1), 1, green, 1);
+				//circle(obstacles, Point((i*obstacles.size().width + j * 3)%obstacles.size().width,(i*obstacles.size().width + j * 3)/obstacles.size().width), 1, theColor, 1);
+			} else {
+				obstacles.data[i*obstacles.size().width + j * 3] = 0;
+				obstacles.data[i*obstacles.size().width + j * 3 + 1] = 0;
+				obstacles.data[i*obstacles.size().width + j * 3 + 2] = 0;
+			}
+		}
+	}
+
+	imshow("Obstacles", obstacles);
 //	imshow("fullBackground", fullBackground);
 //	imshow("noBack",noBack);
 //	imshow("HSV",whsv);

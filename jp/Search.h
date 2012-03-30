@@ -11,6 +11,7 @@ class Search {
 
 public:
 	Search();
+	Grid getGrid(vector<vector<int>> pixelArray);
 	vector<int> gridLocToActual(vector<int> gridLoc);
 	vector<int> actualLocToGrid(vector<int> actualLoc);
 	vector<vector<int>> findPath(vector<vector<int>> pixelArray, vector<int> start, vector<int> end);

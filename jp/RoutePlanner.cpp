@@ -69,10 +69,6 @@ int RoutePlanner::getAction(float* pleo_pos, float* target_pos, float* thresh)
 	/*Calculate the unit vector for the pleo's direction*/
 	pleo_unit_x = static_cast<float>(cos(pleo_ori*0.01745));
 	pleo_unit_y = static_cast<float>(sin(pleo_ori*0.01745));
-	
-	cout << "pleo_ori: " << pleo_ori << endl;
-	cout << "pleo_x: " << pleo_unit_x << endl;
-	cout << "pleo_y: " << pleo_unit_y << endl;
 
 	/*Calculate the destination vector (From pleo's position to the target*/
 	destination_vector[0] = target_x - pleo_x;
@@ -130,16 +126,16 @@ int RoutePlanner::getAction(float* pleo_pos, float* target_pos, float* thresh)
 		return SHARP_TURN_LEFT;
 	case -1:
 		cout << "Turn to the LEFT";
-		return SHARP_TURN_LEFT;
+		return VEER_LEFT;
 	case 0:
 		cout << "Walk FORWARD";
-		return SHARP_TURN_LEFT;
+		return WALK_FORWARD;
 	case 1:
 		cout << "Turn to the RIGHT";
-		return SHARP_TURN_LEFT;
+		return VEER_RIGHT;
 	case 2:
 		cout << "Turn SHARPLY to the RIGHT";
-		return SHARP_TURN_LEFT;
+		return SHARP_TURN_RIGHT;
 	}
 
 }
