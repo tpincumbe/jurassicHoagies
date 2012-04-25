@@ -5,7 +5,7 @@
 
 
 
-float pixelsPerGrid2 = 4.318;
+float pixelsPerGrid2 = 4.318*4;
 
 
 
@@ -54,9 +54,9 @@ void LocsCalc::grabObstacles() {
 	int r;
 	int g;
 	int b;
-	for (int i = 0; i < obstacles.size().width; i ++) {
+	for (int i = 0; i < obstacles.size().height; i ++) {
 		vector<int> newRow;
-		for (int j = 0; j < obstacles.size().height; j ++ ) {
+		for (int j = 0; j < obstacles.size().width; j ++ ) {
 			r = obstacles.data[i * obstacles.size().width + j * 3];
 			g = obstacles.data[i * obstacles.size().width + j * 3 + 1];
 			b = obstacles.data[i * obstacles.size().width + j * 3 + 2];
@@ -68,6 +68,21 @@ void LocsCalc::grabObstacles() {
 		}
 		obstacleGrid.push_back(newRow);		// obstacleGrid will be sent as input to Grid() in Search.cpp
 	}
+	
+	Logger *loggr = new Logger("output_file.txt");
+
+	cout << "Obstacle grid:" << endl;
+	for (int i=0; i<obstacleGrid.size(); i++) {
+		string s;
+		stringstream ss;
+		for (int j=0; j<obstacleGrid.at(0).size(); j++) {
+			ss << obstacleGrid.at(i).at(j);
+		}
+		s = ss.str();
+		char* sc = &s.at(0);
+		loggr->out(sc);
+	}
+
 }
 
 vector<vector<int>> LocsCalc::getMap() {
@@ -298,7 +313,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				cv::Scalar theColor = Scalar(0,255,0);
 				if (i < indexOnPath)
 					theColor = Scalar(255,0,0);
-				circle(camImage,Point(pixelPath.at(i).at(0),pixelPath.at(i).at(1)),3,theColor);
+				circle(camImage,Point(pixelPath.at(i).at(0),480-pixelPath.at(i).at(1)),3,theColor);
 			}
 
 			//cout << "indexOnPath = " << indexOnPath << " checkPoint=(" << pixelPath[indexOnPath][0] << ", " << pixelPath[indexOnPath][1] << ")" << endl;
@@ -347,13 +362,13 @@ void LocsCalc::resetPath() {
 
 void LocsCalc::showImages() {
 	
-	cv::Scalar green = cvScalar(0,255,0);
-	circle(camImage, Point(100, 10), 5, green, 1);
+	/*cv::Scalar green = cvScalar(0,255,0);
+	circle(camImage, Point(100, 10), 5, green, 1);*/
 
 	imshow("Webcam Original", camImage);
 //	imshow("Background", background);
 
-	cv::Scalar red = cvScalar(255,0,0);
+	cv::Scalar red = cvScalar(0,255,0);
 
 	int r,g,b;
 	for (int i = 0; i < obstacles.size().width; i ++) {
@@ -362,28 +377,28 @@ void LocsCalc::showImages() {
 			r = obstacles.data[i * obstacles.size().width + j * 3];
 			g = obstacles.data[i * obstacles.size().width + j * 3 + 1];
 			b = obstacles.data[i * obstacles.size().width + j * 3 + 2];
-			if (r+b+b == (255*3)) {
-
-			} else if ((r | g | b) > 31) {
+			if ((r | g | b) > 31) {
 			//if (r+g+b > 100) {
 
-				obstacles.data[i*obstacles.size().width + j * 3] = 255;
-				obstacles.data[i*obstacles.size().width + j * 3 + 1] = 255;
-				obstacles.data[i*obstacles.size().width + j * 3 + 2] = 255;
+				//obstacles.data[i*obstacles.size().width + j * 3] = 255;
+				//obstacles.data[i*obstacles.size().width + j * 3 + 1] = 255;
+				//obstacles.data[i*obstacles.size().width + j * 3 + 2] = 255;
 
-				//circle(obstacles, Point(j+1, i+1), 1, green, 1);
-				//circle(obstacles, Point((i*obstacles.size().width + j * 3)%obstacles.size().width,(i*obstacles.size().width + j * 3)/obstacles.size().width), 1, theColor, 1);
+				//circle(obstacles, Point(i, j), 1, red, 1);			// <---
+
+				//circle(obstacles, Point((i*obstacles.size().width + j * 3)%obstacles.size().width,(i*obstacles.size().width + j * 3)/obstacles.size().width), 1, red, 1);
+
 			} else {
-				obstacles.data[i*obstacles.size().width + j * 3] = 0;
-				obstacles.data[i*obstacles.size().width + j * 3 + 1] = 0;
-				obstacles.data[i*obstacles.size().width + j * 3 + 2] = 0;
+				//obstacles.data[i*obstacles.size().width + j * 3] = 0;
+				//obstacles.data[i*obstacles.size().width + j * 3 + 1] = 0;
+				//obstacles.data[i*obstacles.size().width + j * 3 + 2] = 0;
 			}
 		}
 	}
 
 	imshow("Obstacles", obstacles);
-//	imshow("fullBackground", fullBackground);
-//	imshow("noBack",noBack);
+	//imshow("fullBackground", fullBackground);
+	imshow("noBack",noBack);
 //	imshow("HSV",whsv);
 //	imshow("HSV2",phsv);
 //	imshow("HSV3",ahsv);
