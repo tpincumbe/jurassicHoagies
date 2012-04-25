@@ -115,7 +115,7 @@ int RoutePlanner::getAction(float* pleo_pos, float* target_pos, float* thresh)
 	if (mult == 2)
 		s += " sharply";
 
-	cout << "Turn " << angle << " degrees " << s << " Distance Away: " << destination_mag << endl;
+	//cout << "Turn " << angle << " degrees " << s << " Distance Away: " << destination_mag << endl;
 
 
 	/*Decide what to do next*/

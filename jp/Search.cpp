@@ -1,6 +1,7 @@
 #include "Search.h"
 #include <vector>
 #include <unordered_set>
+#include <algorithm>
 
 using namespace std;
 using namespace std::tr1;
@@ -321,29 +322,8 @@ vector<vector<int>> gridPathtoPixels(vector<GridLocation> gridPath) {
  */
 vector<vector<int>> Search::findPath(vector<vector<int>> pixelArray, vector<int> start, vector<int> end){
 
-	//vector<vector<int>> obstacleLocs;
-
-	//for (int i=0; i<pixelArray.size(); i++) {
-	//	for (int j=0; j<pixelArray.at(0).size(); j++) {
-	//		if (pixelArray[i][j] == 1) {
-	//			vector<int> curLoc;
-	//			curLoc.push_back(i); curLoc.push_back(j);
-	//			obstacleLocs.push_back(curLoc);
-	//		}
-	//	}
-	//}
-
 	Grid g = Grid(pixelArray, &g);
 	//g.enlargeObstacles(5);			// TODO: uncomment
-
-	cout << endl << endl << "MAP:" << endl;
-	vector<vector<GridLocation>>* theMap = g.getMap();
-	for (int i=0; i<theMap->size(); i++) {
-		for (int j=0; j<theMap->at(0).size(); j++) {
-			cout << theMap->at(i).at(j).getValue();
-		}
-		cout << endl;
-	}
 
 	cout << "Searching from (" << start[0] << ", " << start[1] << ")"
 		 << "to (" << end[0] << ", " << end[1] << ")" << endl;
@@ -368,6 +348,18 @@ vector<vector<int>> Search::findPath(vector<vector<int>> pixelArray, vector<int>
 		cout << "(" << pixelLocPath[i][0] << ", " << pixelLocPath[i][1] << ") ";
 	}
 	cout << endl;
+
+	
+
+	cout << endl << endl << "MAP:" << endl;
+	vector<vector<GridLocation>>* theMap = g.getMap();
+	for (int i=0; i<theMap->size(); i++) {
+		for (int j=0; j<theMap->at(0).size(); j++) {
+			cout << theMap->at(i).at(j).getValue();
+		}
+		cout << endl;
+	}
+
 
 	return pixelLocPath;
 	//return obstacleLocs;

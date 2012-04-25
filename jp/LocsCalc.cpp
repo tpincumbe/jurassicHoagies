@@ -50,16 +50,43 @@ void LocsCalc::grabObstacles() {
 	}
 	absdiff(background, camImage, obstacles);
 	camImage.copyTo(fullBackground);
-
+	
 	int r;
 	int g;
 	int b;
+
+	
+	IplImage img = obstacles;
+
 	for (int i = 0; i < obstacles.size().height; i ++) {
 		vector<int> newRow;
 		for (int j = 0; j < obstacles.size().width; j ++ ) {
-			r = obstacles.data[i * obstacles.size().width + j * 3];
+
+
+
+			/*Vec3f& elem = obstacles.at<Vec3f>(i, j);
+			b = elem[0];
+			g = elem[1];
+			r = elem[2];
+
+			if (i==0 && j==0)
+				cout << "r: " << r << " g: " << g << " b: " << b << endl;*/
+
+			
+			b = ((uchar*)(img.imageData + img.widthStep*i))[j*3];
+			g = ((uchar*)(img.imageData + img.widthStep*i))[j*3+1];
+			r = ((uchar*)(img.imageData + img.widthStep*i))[j*3+2];
+			
+
+			/*r = obstacles.data[i*2 * obstacles.size().width + j];
+			g = obstacles.data[((i*2)+1) * obstacles.size().width + j];
+			b=0;*/
+			//b = obstacles.data[((i*2)+2) * obstacles.size().width + j];
+
+
+			/*r = obstacles.data[i * obstacles.size().width + j * 3];
 			g = obstacles.data[i * obstacles.size().width + j * 3 + 1];
-			b = obstacles.data[i * obstacles.size().width + j * 3 + 2];
+			b = obstacles.data[i * obstacles.size().width + j * 3 + 2];*/
 			if ((r | g | b) > 31) {
 				newRow.push_back(1);
 			} else {
@@ -367,34 +394,6 @@ void LocsCalc::showImages() {
 
 	imshow("Webcam Original", camImage);
 //	imshow("Background", background);
-
-	cv::Scalar red = cvScalar(0,255,0);
-
-	int r,g,b;
-	for (int i = 0; i < obstacles.size().width; i ++) {
-		vector<int> newRow;
-		for (int j = 0; j < obstacles.size().height; j ++) {
-			r = obstacles.data[i * obstacles.size().width + j * 3];
-			g = obstacles.data[i * obstacles.size().width + j * 3 + 1];
-			b = obstacles.data[i * obstacles.size().width + j * 3 + 2];
-			if ((r | g | b) > 31) {
-			//if (r+g+b > 100) {
-
-				//obstacles.data[i*obstacles.size().width + j * 3] = 255;
-				//obstacles.data[i*obstacles.size().width + j * 3 + 1] = 255;
-				//obstacles.data[i*obstacles.size().width + j * 3 + 2] = 255;
-
-				//circle(obstacles, Point(i, j), 1, red, 1);			// <---
-
-				//circle(obstacles, Point((i*obstacles.size().width + j * 3)%obstacles.size().width,(i*obstacles.size().width + j * 3)/obstacles.size().width), 1, red, 1);
-
-			} else {
-				//obstacles.data[i*obstacles.size().width + j * 3] = 0;
-				//obstacles.data[i*obstacles.size().width + j * 3 + 1] = 0;
-				//obstacles.data[i*obstacles.size().width + j * 3 + 2] = 0;
-			}
-		}
-	}
 
 	imshow("Obstacles", obstacles);
 	//imshow("fullBackground", fullBackground);
