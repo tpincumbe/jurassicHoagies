@@ -5,7 +5,7 @@
 
 
 
-float pixelsPerGrid2 = 4.318*4;
+float pixelsPerGrid2 = 16;
 
 
 
@@ -87,7 +87,7 @@ void LocsCalc::grabObstacles() {
 			/*r = obstacles.data[i * obstacles.size().width + j * 3];
 			g = obstacles.data[i * obstacles.size().width + j * 3 + 1];
 			b = obstacles.data[i * obstacles.size().width + j * 3 + 2];*/
-			if ((r | g | b) > 31) {
+			if ((r | g | b) > 62) {
 				newRow.push_back(1);
 			} else {
 				newRow.push_back(0);
@@ -345,7 +345,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 			//cout << "indexOnPath = " << indexOnPath << " checkPoint=(" << pixelPath[indexOnPath][0] << ", " << pixelPath[indexOnPath][1] << ")" << endl;
 
-			float checkPoint[] = {pixelPath[indexOnPath][0], pixelPath[indexOnPath][1]};
+			float checkPoint[] = {pixelPath[indexOnPath][0] + (pixelsPerGrid2/2), pixelPath[indexOnPath][1] - (pixelsPerGrid2/2)};
 			float thresh = 35;	// TODO: good value // checkPoint along path
 			if (indexOnPath == pixelPath.size()-1) {	// checkPoint is the fruit
 				thresh = 15;

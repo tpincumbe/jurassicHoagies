@@ -10,7 +10,7 @@ int manhattanDistance(vector<int>, vector<int>);
 vector<GridLocation> reconstructPath(GridLocation*);
 int pixelRound(float);
 
-float pixelsPerGrid = 4.318*4;
+float pixelsPerGrid = 16;
 
 
 // GRID FUNCTION DECLARATIONS //
@@ -27,8 +27,8 @@ Grid::Grid(vector<vector<int>> pixels, Grid* g) {
 	for (int i=0; i<numRows; i++) {
 		vector<GridLocation> newRow;
 		for (int j=0; j<numCols; j++) {
-			int px = pixelRound(i*yFactor);
-			int py = pixelRound(j*xFactor);
+			int px = pixelRound(i*yFactor + (pixelsPerGrid/2));
+			int py = pixelRound(j*xFactor - (pixelsPerGrid/2));
 					//row,col
 			if (pixels[px][py] == 1) {
 				cout << "Found an obstacle in grid @ (" << i << ", " << j << ")" << " pixel (" << px << ", " << py << ")" << endl;
@@ -309,8 +309,8 @@ vector<vector<int>> gridPathtoPixels(vector<GridLocation> gridPath) {
 	for (int i=0; i<gridPath.size(); i++) {
 		vector<int> next;
 		vector<int> current = gridPath[i].getLocation();
-		next.push_back(current[1]*pixelsPerGrid);
-		next.push_back(480-(current[0]*pixelsPerGrid)-pixelsPerGrid);
+		next.push_back(current[1]*pixelsPerGrid+(pixelsPerGrid/2));
+		next.push_back(480-(current[0]*pixelsPerGrid)-(pixelsPerGrid/2));
 		out.push_back(next);
 	}
 	return out;
@@ -323,7 +323,7 @@ vector<vector<int>> gridPathtoPixels(vector<GridLocation> gridPath) {
 vector<vector<int>> Search::findPath(vector<vector<int>> pixelArray, vector<int> start, vector<int> end){
 
 	Grid g = Grid(pixelArray, &g);
-	//g.enlargeObstacles(5);			// TODO: uncomment
+	g.enlargeObstacles(1);
 
 	cout << "Searching from (" << start[0] << ", " << start[1] << ")"
 		 << "to (" << end[0] << ", " << end[1] << ")" << endl;
@@ -364,3 +364,8 @@ vector<vector<int>> Search::findPath(vector<vector<int>> pixelArray, vector<int>
 	return pixelLocPath;
 	//return obstacleLocs;
 }
+
+
+
+
+// TODO: check each grid space for if image contains obstacle anywhere in the space
