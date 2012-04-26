@@ -101,7 +101,7 @@ int RoutePlanner::getAction(float* pleo_pos, float* target_pos, float* thresh)
 
 	if (angle <= 2.5)
 		mult = 0;	// go straight
-	else if (angle >= 80)
+	else if (angle >= 50)
 		mult = 2;	// hard turn
 
 	if (cp.z() > 0) {
@@ -122,19 +122,19 @@ int RoutePlanner::getAction(float* pleo_pos, float* target_pos, float* thresh)
 
 	switch (dir) {
 	case -2:
-		cout << "Turn SHARPLY to the LEFT";
+		//cout << "Turn SHARPLY to the LEFT\n";
 		return SHARP_TURN_LEFT;
 	case -1:
-		cout << "Turn to the LEFT";
+		//cout << "Turn to the LEFT\n";
 		return VEER_LEFT;
 	case 0:
-		cout << "Walk FORWARD";
+		//cout << "Walk FORWARD\n";
 		return WALK_FORWARD;
 	case 1:
-		cout << "Turn to the RIGHT";
+		//cout << "Turn to the RIGHT\n";
 		return VEER_RIGHT;
 	case 2:
-		cout << "Turn SHARPLY to the RIGHT";
+		//cout << "Turn SHARPLY to the RIGHT\n";
 		return SHARP_TURN_RIGHT;
 	}
 

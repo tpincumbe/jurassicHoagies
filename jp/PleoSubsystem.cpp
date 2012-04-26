@@ -1459,27 +1459,28 @@ string PleoSubsystem::MonitorMessage()
 void PleoSubsystem::SendMovementData()
 {
 	// Take the values from the movement vector and add it to the array
-	vector<int> current = m_movements[m_currentMovement];
-	for ( size_t i = 0; i < current.size(); i += 2 )
-	{
-		SetJointAngle(current[i],current[i+1]);
+	if (m_movements.size() > 0){
+		vector<int> current = m_movements[m_currentMovement];
+		for ( size_t i = 0; i < current.size(); i += 2 )
+		{
+			SetJointAngle(current[i],current[i+1]);
+		}
+
+		// print out the joint data to the log file
+		m_logFile->out("Updating joints: ");
+		char msg[255];
+		sprintf_s(msg,"SENT: %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
+			m_jointData[1]-32-45,m_jointData[2]-32-45,m_jointData[3]-32-45,m_jointData[4]-32-45,
+			m_jointData[5]-32-45,m_jointData[6]-32-45,m_jointData[7]-32-45,m_jointData[8]-32-45,
+			m_jointData[9]-32-45,m_jointData[10]-32-45,m_jointData[11]-32-45,m_jointData[12]-32-45,
+			m_jointData[13]-32-45,m_jointData[14]-32-45);
+		m_logFile->out("[%s]",msg);
+
+		// send the joint data to the serial port
+		int size = 16;
+		serialterm_send(m_jointData, size);
+		m_moving = true;
 	}
-
-	// print out the joint data to the log file
-	m_logFile->out("Updating joints: ");
-	char msg[255];
-	sprintf_s(msg,"SENT: %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
-		m_jointData[1]-32-45,m_jointData[2]-32-45,m_jointData[3]-32-45,m_jointData[4]-32-45,
-		m_jointData[5]-32-45,m_jointData[6]-32-45,m_jointData[7]-32-45,m_jointData[8]-32-45,
-		m_jointData[9]-32-45,m_jointData[10]-32-45,m_jointData[11]-32-45,m_jointData[12]-32-45,
-		m_jointData[13]-32-45,m_jointData[14]-32-45);
-	m_logFile->out("[%s]",msg);
-
-	// send the joint data to the serial port
-	int size = 16;
-	serialterm_send(m_jointData, size);
-	m_moving = true;
-	
 }
 
 
@@ -1535,7 +1536,7 @@ void PleoSubsystem::turnLeftHard(int cycles)
 {
 	char *command = "motion command turnLeftHard";
 	int clen = strlen(command);
-
+cout << "turn left hard pleo\n";
 	for ( int i = 0; i < cycles; i++ )
 	{
 		serialterm_send(command, clen);

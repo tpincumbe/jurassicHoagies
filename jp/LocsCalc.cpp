@@ -126,7 +126,8 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 	int indexOnPath = 0;
 
 	vector<KeyPoint> buildings;
-
+	
+	int sendMsg = 0;
 	while(1) {
 
 		if (!foundPleoFront || !foundPleoBack || !foundRovio) {
@@ -357,7 +358,11 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 			msg = rp.performAction(pleo, checkPoint, &thresh);
 
-			msq->PushMessage("pleo", msg);
+			if (sendMsg > 4){
+				cout << "MSG: " << msg[1] << endl;
+				msq->PushMessage("pleo", msg);
+				sendMsg = 0;
+			}
 
 			if (0 == msg[1].compare("normalize") && afterFirstRun) {	// reached current checkpoint
 				if (++indexOnPath >= pixelPath.size()) {
@@ -377,7 +382,11 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				}
 			}
 		} else {
-			msq->PushMessage("pleo", msg);
+			if (sendMsg > 4 && msg.size() > 1){
+				cout << "MSG: " << msg[1] << endl;
+				msq->PushMessage("pleo", msg);
+				sendMsg = 0;
+			}
 		}
 
 
@@ -388,7 +397,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 			resetPath();
 			break;
 		}*/
-
+		sendMsg++;
 	}
 }
 
