@@ -492,7 +492,7 @@ void LocsCalc::showImages() {
 	imshow("Webcam Original", camImage);
 //	imshow("Background", background);
 
-//	imshow("Obstacles", obstacles);
+	imshow("Obstacles", obstacles);
 //	imshow("fullBackground", fullBackground);
 //	imshow("noBack",noBack);
 //	imshow("HSV",whsv);

@@ -1533,7 +1533,7 @@ void PleoSubsystem::walkForward(int cycles)
 
 void PleoSubsystem::walkForward_wag(int cycles)
 {
-	char *command = "motion command walkForward_wag";
+	char *command = "motion command walkForwardwag";
 	int clen = strlen(command);
 
 	for ( int i = 0; i < cycles; i++ )
@@ -1557,7 +1557,7 @@ void PleoSubsystem::turnRight(int cycles)
 
 void PleoSubsystem::turnRight_wag(int cycles)
 {
-	char *command = "motion command turnRight_wag";
+	char *command = "motion command turnRightwag";
 	int clen = strlen(command);
 
 	for ( int i = 0; i < cycles; i++ )
@@ -1581,7 +1581,7 @@ void PleoSubsystem::turnRightHard(int cycles)
 
 void PleoSubsystem::turnRightHard_wag(int cycles)
 {
-	char *command = "motion command turnRightHard_wag";
+	char *command = "motion command turnRightHardwag";
 	int clen = strlen(command);
 
 	for ( int i = 0; i < cycles; i++ )
@@ -1605,7 +1605,7 @@ void PleoSubsystem::turnLeft(int cycles)
 
 void PleoSubsystem::turnLeft_wag(int cycles)
 {
-	char *command = "motion command turnLeft_wag";
+	char *command = "motion command turnLeftwag";
 	int clen = strlen(command);
 
 	for ( int i = 0; i < cycles; i++ )
@@ -1628,7 +1628,7 @@ void PleoSubsystem::turnLeftHard(int cycles)
 
 void PleoSubsystem::turnLeftHard_wag(int cycles)
 {
-	char *command = "motion command turnLeftHard_wag";
+	char *command = "motion command turnLeftHardwag";
 	int clen = strlen(command);
 	for ( int i = 0; i < cycles; i++ )
 	{
