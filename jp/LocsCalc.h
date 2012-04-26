@@ -36,13 +36,12 @@ using namespace cv;
 class LocsCalc
 {
 public:
-	float xpleofront;
-	float ypleofront;
-	float xpleorear;
-	float ypleorear;
-	float xfruit;
-	float yfruit;
-	float xrov, yrov;
+	float xpleofront, xpleofrontold;
+	float ypleofront, ypleofrontold;
+	float xpleorear, xpleorearold;
+	float ypleorear, ypleorearold;
+	float xfruit, yfruit;
+	float xrov, yrov, xrovold, yrovold;
 	
 	void grabBackground();
 	void grabObstacles();
@@ -66,6 +65,7 @@ private:
 	// blob detector
 	SimpleBlobDetector::Params params;
 	SimpleBlobDetector blobDetector;
+	SimpleBlobDetector headDetector;
 	SimpleBlobDetector rovBD;
 	
 	SimpleBlobDetector::Params params2;

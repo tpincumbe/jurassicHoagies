@@ -15,18 +15,24 @@ LocsCalc::LocsCalc() : webCam(0) {
 	webCam.set(CV_CAP_PROP_FRAME_HEIGHT,480);
 	
 	// Initialize Blob Detector
-	params.minArea = 5;
-	params.maxArea = 200;
+	params.minArea = 20;
+	params.maxArea = 5000;
 	params.filterByColor = false;
 	params.filterByCircularity = false;
 	params.filterByInertia = false;
 	params.filterByConvexity = false;
 	params.filterByArea = true;
+	
+	headDetector = SimpleBlobDetector(params);
+	headDetector.create("SimpleBlob");
+
+	params.minArea = 2;
+	params.maxArea = 100;
 	blobDetector = SimpleBlobDetector(params);
 	blobDetector.create("SimpleBlob");
 
-	params.minArea = 100;
-	params.maxArea = 4000;
+	params.minArea = 200;
+	params.maxArea = 3000;
 	rovBD = SimpleBlobDetector(params);
 	rovBD.create("SimpleBlob");
 
@@ -240,7 +246,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		circle(camImage, Point2f(xpleorear, 480 - ypleorear), 20, cvScalar(255,0,0));
 		
 		// find pink-colored blobs
-		blobDetector.detect(phsv, keyPoints);
+		headDetector.detect(phsv, keyPoints);
 		size = 0;
 		
 		if (keyPoints.size() > 0) {
@@ -422,7 +428,7 @@ void LocsCalc::showImages() {
 	imshow("Webcam Original", camImage);
 //	imshow("Background", background);
 
-	imshow("Obstacles", obstacles);
+//	imshow("Obstacles", obstacles);
 	//imshow("fullBackground", fullBackground);
 	imshow("noBack",noBack);
 //	imshow("HSV",whsv);
