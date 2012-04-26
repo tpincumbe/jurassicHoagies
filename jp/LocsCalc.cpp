@@ -417,7 +417,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				if (++indexOnPath >= pixelPath.size()) {
 					buildings.erase(buildings.begin()+buildingIndex);
 
-					if (buildingIndex >= numBuildings)
+					if (buildings.size() == 0)
 						break;
 					
 					vector<int> end;
@@ -437,6 +437,8 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 						buildingIndex = indx;
 						end.push_back((int) buildings[indx].pt.x);
 						end.push_back(480 - (int) buildings[indx].pt.y);
+					} else {
+						cout << "ERROR ERROR:: whaaaaAAAAAA?" << endl;
 					}
 
 					vector<int> pleoLoc; pleoLoc.push_back(pleo[0]); pleoLoc.push_back(pleo[1]);
