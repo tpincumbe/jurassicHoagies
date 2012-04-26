@@ -127,6 +127,9 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 	bool foundPleoBack = false;
 	bool foundFruit = false;
 	bool foundRovio = false;
+	
+	int frame = 0; //Keeps track of iteration number for replanning/
+	int rp_num = 20; //Re-plan ever 'rp_num' frames
 
 	int buildingIndex;
 	int numBuildings;
@@ -353,8 +356,16 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 				obstacleGrid = emptyGrid;
 				obstacleGrid[0][0] = 1;
+				
 
-				pixelPath = search.findPath(obstacleGrid, pleoLoc, end);
+				//Re-plan after every 'rp_num' frames
+				if((frame%rp_num == 0)||(!(afterFirstRun)))
+				{
+					pixelPath = search.findPath(obstacleGrid, pleoLoc, end);
+				}
+				
+
+				
 				indexOnPath = 0;
 
 				cout << "indexOnPath = " << indexOnPath << endl;
