@@ -175,6 +175,12 @@ private:
 	void turnLeft(int cycles);
 	void turnLeftHard(int cycles);
 
+	void walkForward_wag(int cycles);
+	void turnRight_wag(int cycles);
+	void turnRightHard_wag(int cycles);
+	void turnLeft_wag(int cycles);
+	void turnLeftHard_wag(int cycles);
+
 	#define delay 1
 	#define torsoAngle 0
 };

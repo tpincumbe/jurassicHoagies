@@ -762,12 +762,26 @@ void PleoSubsystem::Execute(string behavior, string argument)
 
 		walkForward(cycles);		
 	}
+	else if ( behavior.compare("walkForward_wag") == 0 )
+	{
+		int cycles = atoi(argument.c_str());	
+		cycles = (cycles == 0) ? 1 : cycles;
+
+		walkForward_wag(cycles);		
+	}
 	else if ( behavior.compare("turnRight") == 0 )
 	{
 		ClearMovements();
 		int cycles = atoi(argument.c_str());\
 		cycles = (cycles == 0) ? 1 : cycles;	
 		turnRight(cycles);
+	}
+	else if ( behavior.compare("turnRight_wag") == 0 )
+	{
+		ClearMovements();
+		int cycles = atoi(argument.c_str());\
+		cycles = (cycles == 0) ? 1 : cycles;	
+		turnRight_wag(cycles);
 	}
 	else if ( behavior.compare("turnRightHard") == 0 )
 	{
@@ -776,6 +790,13 @@ void PleoSubsystem::Execute(string behavior, string argument)
 		cycles = (cycles == 0) ? 1 : cycles;	
 		turnRightHard(cycles);
 	}
+	else if ( behavior.compare("turnRightHard_wag") == 0 )
+	{
+		ClearMovements();
+		int cycles = atoi(argument.c_str());
+		cycles = (cycles == 0) ? 1 : cycles;	
+		turnRightHard_wag(cycles);
+	}
 	else if ( behavior.compare("turnLeft") == 0 )
 	{
 		ClearMovements();
@@ -783,12 +804,26 @@ void PleoSubsystem::Execute(string behavior, string argument)
 		cycles = (cycles == 0) ? 1 : cycles;
 		turnLeft(cycles);
 	}
+	else if ( behavior.compare("turnLeft_wag") == 0 )
+	{
+		ClearMovements();
+		int cycles = atoi(argument.c_str());
+		cycles = (cycles == 0) ? 1 : cycles;
+		turnLeft_wag(cycles);
+	}
 	else if ( behavior.compare("turnLeftHard") == 0 )
 	{
 		ClearMovements();
 		int cycles = atoi(argument.c_str());
 		cycles = (cycles == 0) ? 1 : cycles;	
 		turnLeftHard(cycles);
+	}
+	else if ( behavior.compare("turnLeftHard_wag") == 0 )
+	{
+		ClearMovements();
+		int cycles = atoi(argument.c_str());
+		cycles = (cycles == 0) ? 1 : cycles;	
+		turnLeftHard_wag(cycles);
 	}
 	else if ( behavior.compare("walkForwardOLD") == 0 )
 	{
@@ -1496,9 +1531,33 @@ void PleoSubsystem::walkForward(int cycles)
 	}
 }
 
+void PleoSubsystem::walkForward_wag(int cycles)
+{
+	char *command = "motion command walkForward_wag";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3250);
+	}
+}
+
 void PleoSubsystem::turnRight(int cycles)
 {
 	char *command = "motion command turnRight";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3400);
+	}
+}
+
+void PleoSubsystem::turnRight_wag(int cycles)
+{
+	char *command = "motion command turnRight_wag";
 	int clen = strlen(command);
 
 	for ( int i = 0; i < cycles; i++ )
@@ -1520,6 +1579,18 @@ void PleoSubsystem::turnRightHard(int cycles)
 	}
 }
 
+void PleoSubsystem::turnRightHard_wag(int cycles)
+{
+	char *command = "motion command turnRightHard_wag";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3100);
+	}
+}
+
 void PleoSubsystem::turnLeft(int cycles)
 {
 	char *command = "motion command turnLeft";
@@ -1532,9 +1603,32 @@ void PleoSubsystem::turnLeft(int cycles)
 	}
 }
 
+void PleoSubsystem::turnLeft_wag(int cycles)
+{
+	char *command = "motion command turnLeft_wag";
+	int clen = strlen(command);
+
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3500);
+	}
+}
+
 void PleoSubsystem::turnLeftHard(int cycles)
 {
 	char *command = "motion command turnLeftHard";
+	int clen = strlen(command);
+	for ( int i = 0; i < cycles; i++ )
+	{
+		serialterm_send(command, clen);
+		Sleep(3600);
+	}
+}
+
+void PleoSubsystem::turnLeftHard_wag(int cycles)
+{
+	char *command = "motion command turnLeftHard_wag";
 	int clen = strlen(command);
 	for ( int i = 0; i < cycles; i++ )
 	{

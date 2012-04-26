@@ -20,7 +20,7 @@ vector<string> RoutePlanner::performAction(float* pleo_position, float* fruit_po
 
 	actMsg.push_back("pleo");
 
-	//if (cpsLeft > 3) {
+	if (cpsLeft > 2) {
 		if (WALK_FORWARD == action)
 		{
 			actMsg.push_back("walkForward");
@@ -44,7 +44,7 @@ vector<string> RoutePlanner::performAction(float* pleo_position, float* fruit_po
 		{
 			actMsg.push_back("normalize");
 		}
-	/*} else {
+	} else {
 		if (WALK_FORWARD == action)
 		{
 			actMsg.push_back("walkForward_wag");
@@ -68,7 +68,7 @@ vector<string> RoutePlanner::performAction(float* pleo_position, float* fruit_po
 		{
 			actMsg.push_back("normalize");
 		}
-	}*/
+	}
 
 	actMsg.push_back("1");
 	return actMsg;

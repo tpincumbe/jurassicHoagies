@@ -319,6 +319,11 @@ vector<vector<int>> Search::findPath(vector<int> pixelArray, vector<int> start, 
 		cout << "(" << optimalPath.at(i).getLocation().at(0) << "," << optimalPath.at(i).getLocation().at(1) << ")  ";
 		if (g.getMap()->at(optimalPath[i].getLocation()[0]).at(optimalPath[i].getLocation()[1]).getValue() == 1) {
 			cout << "ERROR: path location (" << optimalPath[i].getLocation()[0] << ", " << optimalPath[i].getLocation()[1] << ") is inside obstacle" << endl;
+			vector<vector<int>> out;
+			vector<int> row;
+			row.push_back(-1);
+			out.push_back(row);
+			return out;
 		}
 	}
 		cout << endl;

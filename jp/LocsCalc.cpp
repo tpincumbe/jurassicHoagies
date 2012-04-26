@@ -384,6 +384,11 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				frame = 0;
 			}
 
+			if (pixelPath.at(0).at(0) == -1) {
+				cout << "continuing.. didn't find something or something rather" << endl;
+				continue;
+			}
+
 			for (int i=0; i<640; i+=pixelsPerGrid2) {
 				line(camImage, Point(i,0), Point(i,480), RGB(255,0,255), 1);
 			}
@@ -409,7 +414,8 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 			if (sendMsg > 4){
 				cout << "MSG: " << msg[1] << endl;
-				msq->PushMessage("pleo", msg);
+				if (0 != msg[1].compare("normalize"))
+					msq->PushMessage("pleo", msg);
 				sendMsg = 0;
 			}
 
@@ -419,9 +425,8 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 					if (buildings.size() == 0)
 						break;
-					
-					vector<int> end;
 
+					end.clear();
 					
 					float dist = 99999;
 					int indx = -1;
