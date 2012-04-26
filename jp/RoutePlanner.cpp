@@ -106,7 +106,7 @@ int RoutePlanner::getAction(float* pleo_pos, float* target_pos, float* thresh, i
 	/*If the pleo has already reached the target, stop the robot*/
 	if(destination_mag < REACH_ERROR)
     {
-		if (REACH_ERROR == 15)
+		if (REACH_ERROR == 10)
 			printf("Reached Destination. Stopping Pleo\n");
 		return STOP;
 	}
@@ -127,7 +127,7 @@ int RoutePlanner::getAction(float* pleo_pos, float* target_pos, float* thresh, i
 
 	if (angle <= 2.5)
 		mult = 0;	// go straight
-	else if (angle >= 50)
+	else if (angle >= TURN_THRESHOLD)
 		mult = 2;	// hard turn
 
 	if (cp.z() > 0) {
