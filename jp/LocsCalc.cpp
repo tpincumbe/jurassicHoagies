@@ -134,13 +134,12 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 	int buildingIndex;
 	int numBuildings;
-	//bool[] isBuilding;
+	vector<KeyPoint> buildings;
 
 	vector<vector<int>> pixelPath;
 	vector<int> end;
 	int indexOnPath = 0;
 
-	vector<KeyPoint> buildings;
 	
 	int sendMsg = 0;
 	while(1) {
@@ -353,17 +352,21 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				buildingIndex = 0;
 				numBuildings = buildings.size();
 
+				float dist = 99999;
+				int indx = -1;
 				for (int i=0; i<buildings.size(); i++) {
-					if (i==0) {
-						end.push_back((int)buildings[0].pt.x);
-						end.push_back(480 - (int)buildings[0].pt.y);
+					float curDist = sqrt((buildings[i].pt.x-pleo[1])*(buildings[i].pt.x-pleo[1]) + (480-buildings[i].pt.y-pleo[0])*(480-buildings[i].pt.y-pleo[0]));
+					if (curDist < dist) {
+						dist = curDist;
+						indx = i;
 					}
 					circle(obstacles, Point2f(buildings.at(i).pt.x, buildings.at(i).pt.y), 5, cvScalar(0,0,255));
 				}
-
-				
-				
-
+				if (indx >=0 ) {
+					buildingIndex = indx;
+					end.push_back((int) buildings[indx].pt.x);
+					end.push_back(480 - (int) buildings[indx].pt.y);
+				}
 				
 			}
 			if((frame++ > 10)||!afterFirstRun)
@@ -412,15 +415,29 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 			if (0 == msg[1].compare("normalize") && afterFirstRun) {	// reached current checkpoint
 				if (++indexOnPath >= pixelPath.size()) {
-					buildingIndex++;
+					buildings.erase(buildings.begin()+buildingIndex);
 
 					if (buildingIndex >= numBuildings)
 						break;
 					
 					vector<int> end;
 
-					end.push_back((int)buildings[buildingIndex].pt.x);
-					end.push_back(480 - (int)buildings[buildingIndex].pt.y);
+					
+					float dist = 99999;
+					int indx = -1;
+					for (int i=0; i<buildings.size(); i++) {
+						float curDist = sqrt((buildings[i].pt.x-pleo[1])*(buildings[i].pt.x-pleo[1]) + (480-buildings[i].pt.y-pleo[0])*(480-buildings[i].pt.y-pleo[0]));
+						if (curDist < dist) {
+							dist = curDist;
+							indx = i;
+						}
+						circle(obstacles, Point2f(buildings.at(i).pt.x, buildings.at(i).pt.y), 5, cvScalar(0,0,255));
+					}
+					if (indx >=0 ) {
+						buildingIndex = indx;
+						end.push_back((int) buildings[indx].pt.x);
+						end.push_back(480 - (int) buildings[indx].pt.y);
+					}
 
 					vector<int> pleoLoc; pleoLoc.push_back(pleo[0]); pleoLoc.push_back(pleo[1]);
 					pixelPath = search.findPath(rovioLoc, pleoLoc, end);
