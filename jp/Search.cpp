@@ -22,7 +22,7 @@ Grid::Grid(vector<int> rovio, Grid* g) {
 	for (int i=0; i<numRows; i++) {
 		vector<GridLocation> newRow;
 		for (int j=0; j<numCols; j++) {
-			if (j == pixelRound(rovio[0]/pixelsPerGrid) && i == pixelRound(rovio[1]/pixelsPerGrid)){
+			if (j == pixelRound(rovio[0]/pixelsPerGrid) && i == pixelRound((480-rovio[1])/pixelsPerGrid)){
 				newRow.push_back(GridLocation(g, i, j, 1));
 			}else{
 				newRow.push_back(GridLocation(g, i, j, 0));
@@ -307,7 +307,7 @@ vector<vector<int>> gridPathtoPixels(vector<GridLocation> gridPath) {
 vector<vector<int>> Search::findPath(vector<int> pixelArray, vector<int> start, vector<int> end){
 
 	Grid g = Grid(pixelArray, &g);
-	g.enlargeObstacles(1);
+	g.enlargeObstacles(2);
 
 	cout << "Searching from (" << start[0] << ", " << start[1] << ")"
 		 << "to (" << end[0] << ", " << end[1] << ")" << endl;

@@ -145,7 +145,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 	int sendMsg = 0;
 	while(1) {
 
-		if (!foundPleoFront || !foundPleoBack || !foundRovio) {
+		if (!foundPleoFront || !foundPleoBack) {
 			cout << "looking for pleo and rovio..." << endl;
 		}
 
@@ -298,21 +298,27 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 			foundRovio = true;
 		}
 
-		for (unsigned int i=0; i<keyPoints.size(); i++){
-			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0){
-				xrov = keyPoints[i].pt.x;
-				yrov = 480 - keyPoints[i].pt.y;
+		if (foundRovio == true){
+			for (unsigned int i=0; i<keyPoints.size(); i++){
+				if (keyPoints[i].size > size && keyPoints[i].pt.x != 0){
+					xrov = keyPoints[i].pt.x;
+					yrov = 480 - keyPoints[i].pt.y;
 
-				if (fabs(xrov-xpleorear) < 50 || fabs(yrov-ypleorear) < 50){
-				      /*cout << "xfabs: " << fabs(xrov-xpleorear) << endl;
-				      cout << "yfabs: " << fabs(yrov-ypleorear) << endl;
-				      cout << "found pleo again" << endl;*/
-				      continue; //found pleo again.
+					if (fabs(xrov-xpleorear) < 50 || fabs(yrov-ypleorear) < 50){
+						  /*cout << "xfabs: " << fabs(xrov-xpleorear) << endl;
+						  cout << "yfabs: " << fabs(yrov-ypleorear) << endl;
+						  cout << "found pleo again" << endl;*/
+						  continue; //found pleo again.
+					}
+					size = keyPoints[i].size;
 				}
-				size = keyPoints[i].size;
-			}
 
-			permKeyPoints.push_back(keyPoints[i]);
+				permKeyPoints.push_back(keyPoints[i]);
+			}
+		}else{
+			xrov = 0;
+			yrov = 0;
+			permKeyPoints.push_back(KeyPoint(cvPoint(0,0),0,-1));
 		}
 
 		//circle rovio on camera
@@ -360,7 +366,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 				
 			}
-			if((frame++ > 19)||!afterFirstRun)
+			if((frame++ > 10)||!afterFirstRun)
 			{
 				obstacleGrid = emptyGrid;
 				obstacleGrid[(480-yrov)][xrov] = 1;
@@ -368,9 +374,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				indexOnPath = 0;
 
 				afterFirstRun = true;
-				cout << "frame: " << frame << endl;
 				//Re-plan after every 'rp_num' frames
-				cout << "afr: " << !afterFirstRun << endl;
 			
 				pixelPath = search.findPath(rovioLoc, pleoLoc, end);
 				cout << "replanning...\n";
@@ -400,7 +404,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 			msg = rp.performAction(pleo, checkPoint, &thresh, pixelPath.size()-indexOnPath-1);
 
-			if (sendMsg > 8){
+			if (sendMsg > 4){
 				cout << "MSG: " << msg[1] << endl;
 				msq->PushMessage("pleo", msg);
 				sendMsg = 0;
@@ -465,7 +469,7 @@ void LocsCalc::showImages() {
 //	imshow("Background", background);
 
 //	imshow("Obstacles", obstacles);
-	//imshow("fullBackground", fullBackground);
+//	imshow("fullBackground", fullBackground);
 //	imshow("noBack",noBack);
 //	imshow("HSV",whsv);
 //	imshow("HSV2",phsv);
