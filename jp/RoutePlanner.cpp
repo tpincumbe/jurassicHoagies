@@ -75,7 +75,7 @@ vector<string> RoutePlanner::performAction(float* pleo_position, float* fruit_po
 	//SendMessage("pleo", actMsg);
 }
 
-int RoutePlanner::getAction(float* pleo_pos, float* target_pos, float* thresh)
+int RoutePlanner::getAction(float* pleo_pos, float* target_pos, float* thresh, int cpsLeft)
 {
 	float pleo_x, pleo_y, pleo_ori, target_x, target_y;
 	float destination_vector[2];
