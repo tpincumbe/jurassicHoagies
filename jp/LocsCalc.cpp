@@ -62,39 +62,21 @@ void LocsCalc::grabObstacles() {
 		vector<int> newRow;
 		for (int j = 0; j < obstacles.size().width; j ++ ) {
 
-
-
-			/*Vec3f& elem = obstacles.at<Vec3f>(i, j);
-			b = elem[0];
-			g = elem[1];
-			r = elem[2];
-
-			if (i==0 && j==0)
-				cout << "r: " << r << " g: " << g << " b: " << b << endl;*/
-
-			
 			b = ((uchar*)(img.imageData + img.widthStep*i))[j*3];
 			g = ((uchar*)(img.imageData + img.widthStep*i))[j*3+1];
 			r = ((uchar*)(img.imageData + img.widthStep*i))[j*3+2];
-			
 
-			/*r = obstacles.data[i*2 * obstacles.size().width + j];
-			g = obstacles.data[((i*2)+1) * obstacles.size().width + j];
-			b=0;*/
-			//b = obstacles.data[((i*2)+2) * obstacles.size().width + j];
-
-
-			/*r = obstacles.data[i * obstacles.size().width + j * 3];
-			g = obstacles.data[i * obstacles.size().width + j * 3 + 1];
-			b = obstacles.data[i * obstacles.size().width + j * 3 + 2];*/
 			if ((r | g | b) > 62) {
-				newRow.push_back(1);
+				newRow.push_back(1);				
 			} else {
 				newRow.push_back(0);
 			}
 		}
 		obstacleGrid.push_back(newRow);		// obstacleGrid will be sent as input to Grid() in Search.cpp
 	}
+
+	cvtColor(obstacles, obstacles, CV_RGB2GRAY);
+	threshold (obstacles,obstacles,30,255, CV_THRESH_BINARY);
 	
 	Logger *loggr = new Logger("output_file.txt");
 
@@ -129,7 +111,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 	vector<vector<int>> pixelPath;
 	int indexOnPath = 0;
 
-	while(1){
+	while(1) {
 
 		if (!foundPleoFront || !foundPleoBack || !foundFruit) {
 			cout << "looking for pleo and fruit..." << endl;
@@ -320,9 +302,15 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		} else if (project >= 3 && foundPleoFront && foundPleoBack && foundFruit) {
 
 			if (!afterFirstRun) {
+
+				/*blobDetector.detect(obstacles, keyPoints);
+				vector<int> end;
+				end.push_back((int)keyPoints[0].pt.x);
+				end.push_back((int)keyPoints[0].pt.y);*/
+
 				vector<int> pleoLoc; pleoLoc.push_back(pleo[0]); pleoLoc.push_back(pleo[1]);
 				vector<int> fruitLoc; fruitLoc.push_back(fruit[0]); fruitLoc.push_back(fruit[1]);
-				pixelPath = search.findPath(obstacleGrid, pleoLoc, fruitLoc);
+				pixelPath = search.findPath(obstacleGrid, pleoLoc, /*end*/fruitLoc);
 				indexOnPath = 0;
 
 				cout << "indexOnPath = " << indexOnPath << endl;

@@ -350,7 +350,6 @@ vector<vector<int>> Search::findPath(vector<vector<int>> pixelArray, vector<int>
 	cout << endl;
 
 	
-
 	cout << endl << endl << "MAP:" << endl;
 	vector<vector<GridLocation>>* theMap = g.getMap();
 	for (int i=0; i<theMap->size(); i++) {
