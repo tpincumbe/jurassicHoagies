@@ -352,11 +352,8 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				vector<int> pleoLoc; pleoLoc.push_back(pleo[0]); pleoLoc.push_back(pleo[1]);
 				
 
-				herp derp TODO: not @ 0,0 but @ rovioLoc in grid row/col terms
-
 				obstacleGrid = emptyGrid;
-				obstacleGrid[0][0] = 1;
-				
+				obstacleGrid[(480-yrov)/pixelsPerGrid2][xrov/pixelsPerGrid2] = 1;
 
 				//Re-plan after every 'rp_num' frames
 				if((frame%rp_num == 0)||(!(afterFirstRun)))
