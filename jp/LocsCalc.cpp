@@ -36,7 +36,7 @@ LocsCalc::LocsCalc() : webCam(0) {
 
 	//rovio blob detector
 	params.minArea = 200;
-	params.maxArea = 3500;
+	params.maxArea = 4200;
 	rovBD = SimpleBlobDetector(params);
 	rovBD.create("SimpleBlob");
 
@@ -101,8 +101,6 @@ void LocsCalc::grabObstacles() {
 	threshold (obstacles,obstacles,30,255, CV_THRESH_BINARY);
 	
 	Logger *loggr = new Logger("output_file.txt");
-
-	cout << "Obstacle grid:" << endl;
 	for (int i=0; i<obstacleGrid.size(); i++) {
 		string s;
 		stringstream ss;
@@ -304,12 +302,12 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				xrov = keyPoints[i].pt.x;
 				yrov = 480 - keyPoints[i].pt.y;
 
-				//if (fabs(xrov-xpleorear) < 50 || fabs(yrov-ypleorear) < 50){
-				//      cout << "xfabs: " << fabs(xrov-xpleorear) << endl;
-				//      cout << "yfabs: " << fabs(yrov-ypleorear) << endl;
-				//      cout << "found pleo again" << endl;
-				//      continue; //found pleo again.
-				//}
+				if (fabs(xrov-xpleorear) < 50 || fabs(yrov-ypleorear) < 50){
+				      /*cout << "xfabs: " << fabs(xrov-xpleorear) << endl;
+				      cout << "yfabs: " << fabs(yrov-ypleorear) << endl;
+				      cout << "found pleo again" << endl;*/
+				      continue; //found pleo again.
+				}
 				size = keyPoints[i].size;
 			}
 
@@ -361,16 +359,14 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				obstacleGrid = emptyGrid;
 				obstacleGrid[(480-yrov)][xrov] = 1;
 
+				cout << "frame: " << frame << endl;
 				//Re-plan after every 'rp_num' frames
-				if((frame%rp_num == 0)||(!(afterFirstRun)))
+				if((frame++%rp_num == 0)||(!(afterFirstRun)))
 				{
 					pixelPath = search.findPath(rovioLoc, pleoLoc, end);
+					cout << "replanning...\n";
 				}
-
-				frame++;
 				indexOnPath = 0;
-
-				cout << "indexOnPath = " << indexOnPath << endl;
 
 				afterFirstRun = true;
 			}

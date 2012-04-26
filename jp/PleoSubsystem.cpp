@@ -1536,7 +1536,6 @@ void PleoSubsystem::turnLeftHard(int cycles)
 {
 	char *command = "motion command turnLeftHard";
 	int clen = strlen(command);
-cout << "turn left hard pleo\n";
 	for ( int i = 0; i < cycles; i++ )
 	{
 		serialterm_send(command, clen);

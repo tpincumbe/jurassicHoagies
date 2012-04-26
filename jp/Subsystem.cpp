@@ -54,7 +54,6 @@ void Subsystem::ThreadProc()
 			else if ( msg.size() > 1 )
 				Execute(msg[1],"");
 			else
-				std::cout << "why?" << endl;
 
 			if (msg.size() > 1) {
 				std::cout << "executing: " << msg[1];

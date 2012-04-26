@@ -17,16 +17,12 @@ float pixelsPerGrid = 16;
 Grid::Grid(vector<int> rovio, Grid* g) {
 	numRows = 480/pixelsPerGrid;	numCols = 640/pixelsPerGrid;
 
-	cout << "Making grid of size " << numRows << " x " << numCols << endl;
-
 	float xFactor = 640/numCols;
 	float yFactor = 480/numRows;
-	cout << "rovio: " << pixelRound(rovio[0]/pixelsPerGrid) << ", " << pixelRound(rovio[1]/pixelsPerGrid) << endl;
 	for (int i=0; i<numRows; i++) {
 		vector<GridLocation> newRow;
 		for (int j=0; j<numCols; j++) {
 			if (j == pixelRound(rovio[0]/pixelsPerGrid) && i == pixelRound(rovio[1]/pixelsPerGrid)){
-				cout << "FOUND ROVIO WHAT WHAT!!\n";
 				newRow.push_back(GridLocation(g, i, j, 1));
 			}else{
 				newRow.push_back(GridLocation(g, i, j, 0));
@@ -319,7 +315,6 @@ vector<vector<int>> Search::findPath(vector<int> pixelArray, vector<int> start, 
 	vector<GridLocation> optimalPath = g.search(start, end);
 
 	
-		cout << "grid path: ";
 	for (int i=0; i<optimalPath.size(); i++) {
 		cout << "(" << optimalPath.at(i).getLocation().at(0) << "," << optimalPath.at(i).getLocation().at(1) << ")  ";
 		if (g.getMap()->at(optimalPath[i].getLocation()[0]).at(optimalPath[i].getLocation()[1]).getValue() == 1) {
@@ -332,20 +327,16 @@ vector<vector<int>> Search::findPath(vector<int> pixelArray, vector<int> start, 
 	
 	// pixel path
 	cout << endl;
-	for (unsigned int i=0; i<pixelLocPath.size(); i++) {
-		cout << "(" << pixelLocPath[i][0] << ", " << pixelLocPath[i][1] << ") ";
-	}
-	cout << endl;
 
 	
-	cout << endl << endl << "MAP:" << endl;
+	/*cout << endl << endl << "MAP:" << endl;
 	vector<vector<GridLocation>>* theMap = g.getMap();
 	for (int i=0; i<theMap->size(); i++) {
 		for (int j=0; j<theMap->at(0).size(); j++) {
 			cout << theMap->at(i).at(j).getValue();
 		}
 		cout << endl;
-	}
+	}*/
 
 
 	return pixelLocPath;
