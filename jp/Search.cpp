@@ -235,9 +235,9 @@ vector<GridLocation*> GridLocation::getNeighbors() {		// TODO: change to getVali
 }
 bool GridLocation::isEdge() {
 	if (value == 1)	return false;	// already an edge
-	if (row==0 || col==0 || row==(grid->numRows-1) || col==(grid->numCols-1)) {		// boundary edge
-		return true;
-	}
+	//if (row==0 || col==0 || row==(grid->numRows-1) || col==(grid->numCols-1)) {		// boundary edge
+	//	return true;
+	//}
 
 	vector<vector<GridLocation>>* theMap = grid->getMap();
 

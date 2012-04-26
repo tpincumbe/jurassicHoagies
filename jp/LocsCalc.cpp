@@ -7,6 +7,7 @@
 
 float pixelsPerGrid2 = 16;
 
+vector<vector<int>> emptyGrid;
 
 
 LocsCalc::LocsCalc() : webCam(0) {
@@ -76,9 +77,9 @@ void LocsCalc::grabObstacles() {
 		vector<int> newRow;
 		for (int j = 0; j < obstacles.size().width; j ++ ) {
 
-			b = ((uchar*)(img.imageData + img.widthStep*i))[j*3];
+			/*b = ((uchar*)(img.imageData + img.widthStep*i))[j*3];
 			g = ((uchar*)(img.imageData + img.widthStep*i))[j*3+1];
-			r = ((uchar*)(img.imageData + img.widthStep*i))[j*3+2];
+			r = ((uchar*)(img.imageData + img.widthStep*i))[j*3+2];*/
 
 			/*if ((r | g | b) > 62) {
 				newRow.push_back(1);				
@@ -88,6 +89,9 @@ void LocsCalc::grabObstacles() {
 		}
 		obstacleGrid.push_back(newRow);		// obstacleGrid will be sent as input to Grid() in Search.cpp
 	}
+
+	emptyGrid = obstacleGrid;
+
 	Mat obsCopy;
 	cvtColor(obstacles, obsCopy, CV_RGB2GRAY);
 	obstacles = obsCopy;
@@ -224,22 +228,31 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		blobDetector.detect(whsv, keyPoints);
 		float size = 0;
 		
-		if (keyPoints.size() > 0) {
-			if (!foundPleoBack)
-				cout << " * found pleo back" << endl;
-			foundPleoBack = true;
-		}
+		if (foundPleoFront) {
 		
-		//cout << "white key points size: " << keyPoints.size() << endl;
-		// locate largest blob
-		for(unsigned int i=0; i<keyPoints.size(); i++) {
-			if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
-				xpleorear = keyPoints[i].pt.x;
-				ypleorear = 480 - keyPoints[i].pt.y;
-				size = keyPoints[i].size;
+			//cout << "white key points size: " << keyPoints.size() << endl;
+			// locate largest blob
+			for(unsigned int i=0; i<keyPoints.size(); i++) {
+				if (keyPoints[i].size > size && keyPoints[i].pt.x != 0) {
+
+					float tmpX = keyPoints[i].pt.x;
+					float tmpY = 480 - keyPoints[i].pt.y;
+					if (sqrt((tmpX-xpleofront)*(tmpX-xpleofront)+(tmpY-ypleofront)*(tmpY-ypleofront)) < 15) {
+						xpleorear = keyPoints[i].pt.x;
+						ypleorear = 480 - keyPoints[i].pt.y;
+						size = keyPoints[i].size;
+						
+						if (!foundPleoBack)
+							cout << " * found pleo back" << endl;
+						foundPleoBack = true;
+
+						permKeyPoints.push_back(keyPoints[i]);
+
+						break;
+					}
+
+				}
 			}
-			
-			permKeyPoints.push_back(keyPoints[i]);
 		}
 		
 		// circle pleo rear on camera
@@ -249,6 +262,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		headDetector.detect(phsv, keyPoints);
 		size = 0;
 		
+
 		if (keyPoints.size() > 0) {
 			if (!foundPleoFront)
 				cout << " * found pleo front" << endl;
@@ -333,6 +347,13 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				}
 
 				vector<int> pleoLoc; pleoLoc.push_back(pleo[0]); pleoLoc.push_back(pleo[1]);
+				
+
+				herp derp TODO: not @ 0,0 but @ rovioLoc in grid row/col terms
+
+				obstacleGrid = emptyGrid;
+				obstacleGrid[0][0] = 1;
+
 				pixelPath = search.findPath(obstacleGrid, pleoLoc, end);
 				indexOnPath = 0;
 
