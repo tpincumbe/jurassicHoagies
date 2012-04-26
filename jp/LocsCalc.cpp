@@ -366,6 +366,8 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				{
 					pixelPath = search.findPath(rovioLoc, pleoLoc, end);
 				}
+
+				frame++;
 				indexOnPath = 0;
 
 				cout << "indexOnPath = " << indexOnPath << endl;
