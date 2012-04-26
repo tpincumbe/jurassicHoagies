@@ -53,7 +53,6 @@ void Subsystem::ThreadProc()
 				Execute(msg[1],msg[2]);
 			else if ( msg.size() > 1 )
 				Execute(msg[1],"");
-			else
 
 			if (msg.size() > 1) {
 				std::cout << "executing: " << msg[1];

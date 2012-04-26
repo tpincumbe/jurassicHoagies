@@ -137,6 +137,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 	//bool[] isBuilding;
 
 	vector<vector<int>> pixelPath;
+	vector<int> end;
 	int indexOnPath = 0;
 
 	vector<KeyPoint> buildings;
@@ -337,11 +338,12 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		//	}
 		//} else*/ if (project >= 3 && foundPleoFront && foundPleoBack && foundRovio) {
 
+			vector<int> pleoLoc; pleoLoc.push_back(pleo[0]); pleoLoc.push_back(pleo[1]);
 			if (!afterFirstRun) {
 
 				blobDetector2.detect(obstacles, buildings);
 
-				vector<int> end;
+				
 				buildingIndex = 0;
 				numBuildings = buildings.size();
 
@@ -353,24 +355,28 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 					circle(obstacles, Point2f(buildings.at(i).pt.x, buildings.at(i).pt.y), 5, cvScalar(0,0,255));
 				}
 
-				vector<int> pleoLoc; pleoLoc.push_back(pleo[0]); pleoLoc.push_back(pleo[1]);
+				
 				
 
+				
+			}
+			if((frame++ > 19)||!afterFirstRun)
+			{
 				obstacleGrid = emptyGrid;
 				obstacleGrid[(480-yrov)][xrov] = 1;
 
-				cout << "frame: " << frame << endl;
-				//Re-plan after every 'rp_num' frames
-				if((frame++%rp_num == 0)||(!(afterFirstRun)))
-				{
-					pixelPath = search.findPath(rovioLoc, pleoLoc, end);
-					cout << "replanning...\n";
-				}
 				indexOnPath = 0;
 
 				afterFirstRun = true;
-			}
+				cout << "frame: " << frame << endl;
+				//Re-plan after every 'rp_num' frames
+				cout << "afr: " << !afterFirstRun << endl;
 			
+				pixelPath = search.findPath(rovioLoc, pleoLoc, end);
+				cout << "replanning...\n";
+				frame = 0;
+			}
+
 			for (int i=0; i<640; i+=pixelsPerGrid2) {
 				line(camImage, Point(i,0), Point(i,480), RGB(255,0,255), 1);
 			}
@@ -394,7 +400,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 			msg = rp.performAction(pleo, checkPoint, &thresh, pixelPath.size()-indexOnPath-1);
 
-			if (sendMsg > 4){
+			if (sendMsg > 8){
 				cout << "MSG: " << msg[1] << endl;
 				msq->PushMessage("pleo", msg);
 				sendMsg = 0;
