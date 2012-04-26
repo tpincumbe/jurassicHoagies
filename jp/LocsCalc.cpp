@@ -24,16 +24,19 @@ LocsCalc::LocsCalc() : webCam(0) {
 	params.filterByConvexity = false;
 	params.filterByArea = true;
 	
+	//Head blob detector
 	headDetector = SimpleBlobDetector(params);
 	headDetector.create("SimpleBlob");
 
+	//tail blob detector
 	params.minArea = 2;
 	params.maxArea = 100;
 	blobDetector = SimpleBlobDetector(params);
 	blobDetector.create("SimpleBlob");
 
+	//rovio blob detector
 	params.minArea = 200;
-	params.maxArea = 3000;
+	params.maxArea = 3500;
 	rovBD = SimpleBlobDetector(params);
 	rovBD.create("SimpleBlob");
 
@@ -237,7 +240,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 
 					float tmpX = keyPoints[i].pt.x;
 					float tmpY = 480 - keyPoints[i].pt.y;
-					if (sqrt((tmpX-xpleofront)*(tmpX-xpleofront)+(tmpY-ypleofront)*(tmpY-ypleofront)) < 15) {
+					if (sqrt((tmpX-xpleofront)*(tmpX-xpleofront)+(tmpY-ypleofront)*(tmpY-ypleofront)) < 150) {
 						xpleorear = keyPoints[i].pt.x;
 						ypleorear = 480 - keyPoints[i].pt.y;
 						size = keyPoints[i].size;
@@ -319,6 +322,9 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 		float orient = calcOrient(xpleofront, ypleofront, xpleorear, ypleorear);
 		
 		float pleo[3] = {(xpleofront + xpleorear) / 2, (ypleofront + ypleorear) / 2, orient};
+		vector<int> rovioLoc;
+		rovioLoc.push_back(xrov);
+		rovioLoc.push_back(yrov);
 
 		/*if (project <= 2) {
 		//	// pass relevant information to route planner
@@ -350,9 +356,9 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				
 
 				obstacleGrid = emptyGrid;
-				obstacleGrid[(480-yrov)/pixelsPerGrid2][xrov/pixelsPerGrid2] = 1;
+				obstacleGrid[(480-yrov)][xrov] = 1;
 
-				pixelPath = search.findPath(obstacleGrid, pleoLoc, end);
+				pixelPath = search.findPath(rovioLoc, pleoLoc, end);
 				indexOnPath = 0;
 
 				cout << "indexOnPath = " << indexOnPath << endl;
@@ -402,7 +408,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 					end.push_back(480 - (int)buildings[buildingIndex].pt.y);
 
 					vector<int> pleoLoc; pleoLoc.push_back(pleo[0]); pleoLoc.push_back(pleo[1]);
-					pixelPath = search.findPath(obstacleGrid, pleoLoc, end);
+					pixelPath = search.findPath(rovioLoc, pleoLoc, end);
 					indexOnPath = 0;
 				}
 			}
@@ -449,7 +455,7 @@ void LocsCalc::showImages() {
 
 //	imshow("Obstacles", obstacles);
 	//imshow("fullBackground", fullBackground);
-	imshow("noBack",noBack);
+//	imshow("noBack",noBack);
 //	imshow("HSV",whsv);
 //	imshow("HSV2",phsv);
 //	imshow("HSV3",ahsv);

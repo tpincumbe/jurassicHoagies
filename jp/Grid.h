@@ -14,7 +14,7 @@ public:
 	int numRows, numCols;
 	Grid(vector<vector<GridLocation>>);
 	Grid(int**,int,int);
-	Grid(vector<vector<int>>, Grid*);
+	Grid(vector<int>, Grid*);
 	void enlargeObstacles(int);
 	void setLocation(int,int,int);
 	vector<vector<GridLocation>>* getMap();

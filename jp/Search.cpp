@@ -14,27 +14,23 @@ float pixelsPerGrid = 16;
 
 
 // GRID FUNCTION DECLARATIONS //
-Grid::Grid(vector<vector<int>> pixels, Grid* g) {
+Grid::Grid(vector<int> rovio, Grid* g) {
 	numRows = 480/pixelsPerGrid;	numCols = 640/pixelsPerGrid;
 
 	cout << "Making grid of size " << numRows << " x " << numCols << endl;
 
-	int ps = pixels.size();
-
 	float xFactor = 640/numCols;
 	float yFactor = 480/numRows;
-
+	cout << "rovio: " << pixelRound(rovio[0]/pixelsPerGrid) << ", " << pixelRound(rovio[1]/pixelsPerGrid) << endl;
 	for (int i=0; i<numRows; i++) {
 		vector<GridLocation> newRow;
 		for (int j=0; j<numCols; j++) {
-			int px = pixelRound(i*yFactor + (pixelsPerGrid/2));
-			int py = pixelRound(j*xFactor + (pixelsPerGrid/2));
-					//row,col
-			if (pixels[px][py] == 1) {
-				cout << "Found an obstacle in grid @ (" << i << ", " << j << ")" << " pixel (" << px << ", " << py << ")" << endl;
+			if (j == pixelRound(rovio[0]/pixelsPerGrid) && i == pixelRound(rovio[1]/pixelsPerGrid)){
+				cout << "FOUND ROVIO WHAT WHAT!!\n";
+				newRow.push_back(GridLocation(g, i, j, 1));
+			}else{
+				newRow.push_back(GridLocation(g, i, j, 0));
 			}
-
-			newRow.push_back(GridLocation(g, i, j, pixels[px][py]));
 		}
 		map.push_back(newRow);
 	}
@@ -235,9 +231,9 @@ vector<GridLocation*> GridLocation::getNeighbors() {		// TODO: change to getVali
 }
 bool GridLocation::isEdge() {
 	if (value == 1)	return false;	// already an edge
-	//if (row==0 || col==0 || row==(grid->numRows-1) || col==(grid->numCols-1)) {		// boundary edge
-	//	return true;
-	//}
+	if (row==0 || col==0 || row==(grid->numRows-1) || col==(grid->numCols-1)) {		// boundary edge
+		return false;
+	}
 
 	vector<vector<GridLocation>>* theMap = grid->getMap();
 
@@ -312,7 +308,7 @@ vector<vector<int>> gridPathtoPixels(vector<GridLocation> gridPath) {
 /*
  *	Compute and return pixel path from grid
  */
-vector<vector<int>> Search::findPath(vector<vector<int>> pixelArray, vector<int> start, vector<int> end){
+vector<vector<int>> Search::findPath(vector<int> pixelArray, vector<int> start, vector<int> end){
 
 	Grid g = Grid(pixelArray, &g);
 	g.enlargeObstacles(1);
