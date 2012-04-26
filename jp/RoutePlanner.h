@@ -23,7 +23,7 @@ public:
 	void Execute(string behavior, string argument);
 	void Shutdown();
 	string MonitorMessage();
-	vector<string> performAction(float* p, float* t, float* thresh);
+	vector<string> performAction(float* p, float* t, float* thresh, int cpsLeft);
 private:
-	int getAction(float[], float[], float* thresh);
+	int getAction(float[], float[], float* thresh, int cpsLeft);
 };

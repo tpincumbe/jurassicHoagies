@@ -13,35 +13,61 @@ returns a string
 using namespace Eigen;
 using namespace std;
 
-vector<string> RoutePlanner::performAction(float* pleo_position, float* fruit_position, float* thresh) {
+vector<string> RoutePlanner::performAction(float* pleo_position, float* fruit_position, float* thresh, int cpsLeft) {
 	vector<string> actMsg;
 	
-	int action = getAction(pleo_position, fruit_position, thresh);
+	int action = getAction(pleo_position, fruit_position, thresh, cpsLeft);
 
 	actMsg.push_back("pleo");
 
-	if (WALK_FORWARD == action)
-	{
-		actMsg.push_back("walkForward");
-	}
-	else if (VEER_LEFT == action)
-	{
-		actMsg.push_back("turnLeft");
-	}
-	else if (VEER_RIGHT == action)
-	{
-		actMsg.push_back("turnRight");
-	}
-	else if (SHARP_TURN_LEFT == action)
-	{
-		actMsg.push_back("turnLeftHard");
-	}
-	else if (SHARP_TURN_RIGHT == action)
-	{
-		actMsg.push_back("turnRightHard");
-	}else if (STOP == action)
-	{
-		actMsg.push_back("normalize");
+	if (cpsLeft > 3) {
+		if (WALK_FORWARD == action)
+		{
+			actMsg.push_back("walkForward");
+		}
+		else if (VEER_LEFT == action)
+		{
+			actMsg.push_back("turnLeft");
+		}
+		else if (VEER_RIGHT == action)
+		{
+			actMsg.push_back("turnRight");
+		}
+		else if (SHARP_TURN_LEFT == action)
+		{
+			actMsg.push_back("turnLeftHard");
+		}
+		else if (SHARP_TURN_RIGHT == action)
+		{
+			actMsg.push_back("turnRightHard");
+		}else if (STOP == action)
+		{
+			actMsg.push_back("normalize");
+		}
+	} else {
+		if (WALK_FORWARD == action)
+		{
+			actMsg.push_back("walkForward_wag");
+		}
+		else if (VEER_LEFT == action)
+		{
+			actMsg.push_back("turnLeft_wag");
+		}
+		else if (VEER_RIGHT == action)
+		{
+			actMsg.push_back("turnRight_wag");
+		}
+		else if (SHARP_TURN_LEFT == action)
+		{
+			actMsg.push_back("turnLeftHard_wag");
+		}
+		else if (SHARP_TURN_RIGHT == action)
+		{
+			actMsg.push_back("turnRightHard_wag");
+		}else if (STOP == action)
+		{
+			actMsg.push_back("normalize");
+		}
 	}
 
 	actMsg.push_back("1");

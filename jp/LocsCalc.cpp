@@ -356,7 +356,7 @@ void LocsCalc::detect(int project, SystemQueue *msq) {
 				thresh = 15;
 			}
 
-			msg = rp.performAction(pleo, checkPoint, &thresh);
+			msg = rp.performAction(pleo, checkPoint, &thresh, pixelPath.size()-indexOnPath-1);
 
 			if (sendMsg > 4){
 				cout << "MSG: " << msg[1] << endl;
