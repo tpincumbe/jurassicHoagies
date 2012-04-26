@@ -28,7 +28,7 @@ Grid::Grid(vector<vector<int>> pixels, Grid* g) {
 		vector<GridLocation> newRow;
 		for (int j=0; j<numCols; j++) {
 			int px = pixelRound(i*yFactor + (pixelsPerGrid/2));
-			int py = pixelRound(j*xFactor - (pixelsPerGrid/2));
+			int py = pixelRound(j*xFactor + (pixelsPerGrid/2));
 					//row,col
 			if (pixels[px][py] == 1) {
 				cout << "Found an obstacle in grid @ (" << i << ", " << j << ")" << " pixel (" << px << ", " << py << ")" << endl;
@@ -38,14 +38,6 @@ Grid::Grid(vector<vector<int>> pixels, Grid* g) {
 		}
 		map.push_back(newRow);
 	}
-
-	//for (unsigned int ii=0; ii<numRows; ii++) {
-	//	for (unsigned int jj=0; jj<numCols; jj++) {
-	//		ii; jj;
-	//		cout << map.at(ii).at(jj).getValue() << " ";
-	//	}
-	//	cout << endl;
-	//}
 }
 void Grid::enlargeObstacles(int gridSpaces) {
 

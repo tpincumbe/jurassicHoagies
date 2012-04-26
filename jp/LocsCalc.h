@@ -42,6 +42,7 @@ public:
 	float ypleorear;
 	float xfruit;
 	float yfruit;
+	float xrov, yrov;
 	
 	void grabBackground();
 	void grabObstacles();
@@ -65,6 +66,10 @@ private:
 	// blob detector
 	SimpleBlobDetector::Params params;
 	SimpleBlobDetector blobDetector;
+	SimpleBlobDetector rovBD;
+	
+	SimpleBlobDetector::Params params2;
+	SimpleBlobDetector blobDetector2;
 
 	// matrix that holds seperate color channels
 	vector<Mat> slices;
@@ -75,6 +80,7 @@ private:
 	// background subtraction matrices
 	Mat background;		// background image
 	Mat obstacles;		// obstacles
+	Mat rov;
 	Mat fullBackground;	// background and obstacles
 	Mat noBack;			// image - background and obstacles
 	vector<vector<int>> obstacleGrid;	// indicates location of obstacles
